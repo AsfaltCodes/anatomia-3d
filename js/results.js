@@ -4,44 +4,44 @@ import { load, save } from './storage.js';
 
 export function formatTime(ms) {
   const s = Math.floor(ms / 1000);
-  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-function countUp(el, to, ms = 1200) {
+function countUp(el, to, ms = 1000) {
   const start = performance.now();
   function step(now) {
     const k = Math.min((now - start) / ms, 1);
     el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
-    if (k < 1) requestAnimationFrame(step);
+    if (k < 1 && el.isConnected) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
-// A burst of square "dither dots" in the accent colour, snapped to a 4px grid.
+// A burst of square pink dots snapped to a 4px grid, like the dithered thumbnails.
 function celebrate(canvas) {
   if (!canvas.isConnected) return;
   const ctx = canvas.getContext('2d');
   const { width, height } = canvas.getBoundingClientRect();
   canvas.width = width;
   canvas.height = height;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-  const dots = Array.from({ length: 220 }, () => {
+  const pink = getComputedStyle(document.documentElement).getPropertyValue('--pink');
+  const dots = Array.from({ length: 160 }, () => {
     const angle = Math.random() * Math.PI * 2;
-    const speed = 2 + Math.random() * 7;
-    return { x: width / 2, y: height / 2, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2 };
+    const speed = 1.5 + Math.random() * 5;
+    return { x: width / 2, y: height * 0.35, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2 };
   });
   const start = performance.now();
   function step(now) {
-    const k = (now - start) / 1500;
+    const k = (now - start) / 1400;
     if (!canvas.isConnected) return;
     ctx.clearRect(0, 0, width, height);
     if (k >= 1) return;
-    ctx.fillStyle = accent;
+    ctx.fillStyle = pink;
     ctx.globalAlpha = 1 - k;
     for (const d of dots) {
       d.x += d.vx;
       d.y += d.vy;
-      d.vy += 0.12;
+      d.vy += 0.1;
       ctx.fillRect(Math.round(d.x / 4) * 4, Math.round(d.y / 4) * 4, 4, 4);
     }
     requestAnimationFrame(step);
@@ -49,28 +49,28 @@ function celebrate(canvas) {
   requestAnimationFrame(step);
 }
 
-export function showResults(container, { score, timeMs, key, onAgain, onMenu }) {
+export function bestScore(key) {
+  return load(key, null);
+}
+
+export function showResults(dialog, { title, score, timeMs, key, onAgain, onAnother }) {
   const best = load(key, null);
   const record = isBetter({ score, timeMs }, best);
   if (record) save(key, { score, timeMs });
 
-  container.innerHTML = `
-    <section class="results">
-      <canvas></canvas>
-      <div>
-        <p class="eyebrow">${t('results.heading')}</p>
-        ${record ? `<span class="record">${t('results.record')}</span>` : ''}
-        <p class="score"><span>0</span><small>%</small></p>
-        <p class="meta">${t('results.time')} ${formatTime(timeMs)}</p>
-        <div class="row">
-          <button class="btn" data-again>${t('results.again')}</button>
-          <button class="btn btn-ghost" data-menu>${t('results.menu')}</button>
-        </div>
-      </div>
-    </section>`;
-  countUp(container.querySelector('.score span'), score);
-  const confetti = container.querySelector('.results canvas');
-  if (score === 100) setTimeout(() => celebrate(confetti), 900);
-  container.querySelector('[data-again]').onclick = onAgain;
-  container.querySelector('[data-menu]').onclick = onMenu;
+  dialog.innerHTML = `
+    <canvas aria-hidden="true"></canvas>
+    <p class="results-title">${title}</p>
+    <p class="results-score"><span>0</span>%</p>
+    <p class="results-meta">${t('results.time')} ${formatTime(timeMs)}${record ? ` <span class="badge">${t('results.record')}</span>` : ''}</p>
+    <div class="results-actions">
+      <button class="btn btn-primary" data-again>${t('results.again')}</button>
+      <button class="btn" data-another>${t('results.another')}</button>
+    </div>`;
+  dialog.showModal();
+  countUp(dialog.querySelector('.results-score span'), score);
+  const confetti = dialog.querySelector('canvas');
+  if (score === 100) setTimeout(() => celebrate(confetti), 500);
+  dialog.querySelector('[data-again]').onclick = () => { dialog.close(); onAgain(); };
+  dialog.querySelector('[data-another]').onclick = () => { dialog.close(); onAnother(); };
 }

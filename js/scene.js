@@ -8,12 +8,14 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 export const SYSTEMS = ['skin', 'muscles', 'bones', 'nerves'];
-const PAPER = 0xf4efe6;
-const INK = 0x1a1a1a;
-const ACCENT = 0xd2452f;
-const TONES = { bones: 0xefe7d8, muscles: 0xd9bfae, nerves: 0xe9dcc8, skin: 0xd8cfc2 };
-const STATE_COLORS = { wrong: ACCENT, target: ACCENT, correct: 0x6b665e };
-const CLICK_TOLERANCE_PX = 5;
+const BACKGROUND = 0xffffff;
+const INK = 0x18161b;
+const PINK = 0xe6397a;
+const SLATE = 0x4a4550;
+const TONES = { bones: 0xebe6e0, muscles: 0xdcc4bf, nerves: 0xe8e0d7, skin: 0xd9d3d0 };
+const STATE_COLORS = { wrong: SLATE, target: PINK, correct: PINK };
+const DIMMED_OPACITY = 0.18;
+const CLICK_TOLERANCE_PX = 6;
 
 const gltfCache = new Map();
 
@@ -34,8 +36,8 @@ export function hasWebGL() {
 }
 
 export function addLights(scene) {
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8ab98, 1.6));
-  const key = new THREE.DirectionalLight(0xffffff, 2.2);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb9b0b4, 1.7));
+  const key = new THREE.DirectionalLight(0xffffff, 2.1);
   key.position.set(1.5, 2.5, 2);
   scene.add(key);
   const rim = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -43,7 +45,7 @@ export function addLights(scene) {
   scene.add(rim);
 }
 
-function boxOf(objects) {
+export function boxOf(objects) {
   const box = new THREE.Box3();
   objects.forEach(o => box.expandByObject(o));
   return box;
@@ -55,7 +57,7 @@ export async function createScene(canvas, structures) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(PAPER);
+  scene.background = new THREE.Color(BACKGROUND);
   addLights(scene);
   const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 50);
   const controls = new OrbitControls(camera, canvas);
@@ -84,7 +86,7 @@ export async function createScene(canvas, structures) {
       if (!obj.isMesh || !byId.has(obj.name)) return;
       obj.geometry.computeVertexNormals();
       obj.material = new THREE.MeshStandardMaterial({ color: TONES[system], roughness: 0.85, metalness: 0 });
-      if (system === 'skin') Object.assign(obj.material, { transparent: true, opacity: 0.14, depthWrite: false });
+      if (system === 'skin') Object.assign(obj.material, { transparent: true, opacity: 0.12, depthWrite: false });
       meshes.set(obj.name, obj);
     });
     groups[system] = group;
@@ -92,9 +94,10 @@ export async function createScene(canvas, structures) {
   });
 
   const layers = { skin: true, muscles: true, bones: true, nerves: true };
-  let pickSystem = 'bones';
+  let pickable = [];
   const highlights = new Map();
   let flight = null;
+  let running = false;
   const pickListeners = [];
   const hoverListeners = [];
   const raycaster = new THREE.Raycaster();
@@ -104,15 +107,17 @@ export async function createScene(canvas, structures) {
     const rect = canvas.getBoundingClientRect();
     pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
     raycaster.setFromCamera(pointer, camera);
-    if (!layers[pickSystem]) return null;
-    const hit = raycaster.intersectObject(groups[pickSystem], true)[0];
+    const hit = raycaster.intersectObjects(pickable.filter(m => layers[byId.get(m.name).system]), false)[0];
     return hit ? hit.object.name : null;
   }
 
   let down = null;
-  canvas.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; });
+  canvas.addEventListener('pointerdown', e => {
+    down = e.isPrimary && e.button === 0 ? { x: e.clientX, y: e.clientY } : null;
+  });
+  canvas.addEventListener('pointercancel', () => { down = null; });
   canvas.addEventListener('pointerup', e => {
-    if (!down) return;
+    if (!down || !e.isPrimary) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
     down = null;
     if (moved > CLICK_TOLERANCE_PX) return;
@@ -121,7 +126,7 @@ export async function createScene(canvas, structures) {
   });
   let hovered = null;
   canvas.addEventListener('pointermove', e => {
-    if (down) return;
+    if (down || e.pointerType === 'touch') return;
     const id = meshAt(e);
     if (id === hovered) return;
     hovered = id;
@@ -155,8 +160,18 @@ export async function createScene(canvas, structures) {
     return { target: center, position: center.clone().add(direction.clone().normalize().multiplyScalar(distance)) };
   }
 
-  function fly(view, ms) {
-    flight = { from: { p: camera.position.clone(), t: controls.target.clone() }, to: view, start: performance.now(), ms };
+  function go(view, ms) {
+    if (ms) {
+      flight = { from: { p: camera.position.clone(), t: controls.target.clone() }, to: view, start: performance.now(), ms };
+    } else {
+      flight = null;
+      camera.position.copy(view.position);
+      controls.target.copy(view.target);
+    }
+  }
+
+  function baseColor(id) {
+    return TONES[byId.get(id).system];
   }
 
   let raf = 0;
@@ -170,15 +185,13 @@ export async function createScene(canvas, structures) {
       if (k === 1) flight = null;
     }
     const pulse = 0.5 + 0.5 * Math.sin(now / 160);
-    for (const [id, state] of highlights) {
-      const m = meshes.get(id).material;
-      if (state === 'target') m.emissive.setHex(ACCENT).multiplyScalar(0.25 + 0.35 * pulse);
-    }
+    for (const [id, state] of highlights)
+      if (state === 'target') meshes.get(id).material.emissive.setHex(PINK).multiplyScalar(0.15 + 0.3 * pulse);
     controls.update();
     composer.render();
   }
-  resize();
 
+  let focusIds = [];
   const api = {
     get layers() { return { ...layers }; },
 
@@ -187,8 +200,19 @@ export async function createScene(canvas, structures) {
       groups[system].visible = visible;
     },
 
-    setPickSystem(system) {
-      pickSystem = system;
+    // The focused parts are pickable; the rest of their system stays visible but faded, for context.
+    setFocus(system, ids) {
+      focusIds = ids;
+      const focus = new Set(ids);
+      pickable = [];
+      for (const [id, mesh] of meshes) {
+        const s = byId.get(id).system;
+        if (s === 'skin') continue;
+        const inFocus = s === system && focus.has(id);
+        const faded = s === system && !inFocus;
+        Object.assign(mesh.material, { transparent: faded, opacity: faded ? DIMMED_OPACITY : 1, depthWrite: !faded });
+        if (inFocus) pickable.push(mesh);
+      }
     },
 
     onPick(cb) { pickListeners.push(cb); },
@@ -198,14 +222,14 @@ export async function createScene(canvas, structures) {
       for (const [other, s] of highlights) {
         if (other === id || s === state) {
           const m = meshes.get(other).material;
-          m.color.setHex(TONES[byId.get(other).system]);
+          m.color.setHex(baseColor(other));
           m.emissive.setHex(0);
           highlights.delete(other);
         }
       }
       if (!id || !state || !meshes.has(id)) return;
       highlights.set(id, state);
-      if (STATE_COLORS[state]) meshes.get(id).material.color.setHex(STATE_COLORS[state]);
+      meshes.get(id).material.color.setHex(STATE_COLORS[state]);
     },
 
     clearHighlights() {
@@ -216,33 +240,23 @@ export async function createScene(canvas, structures) {
       const mesh = meshes.get(id);
       if (!mesh) return;
       const direction = camera.position.clone().sub(controls.target);
-      fly(viewFor(boxOf([mesh]), direction, 2.6, 0.55), ms);
+      go(viewFor(boxOf([mesh]), direction, 2.6, 0.55), ms);
     },
 
-    frameSystem(system, ms = 0) {
-      const view = viewFor(boxOf([groups[system]]));
-      if (ms) fly(view, ms);
-      else {
-        camera.position.copy(view.position);
-        controls.target.copy(view.target);
-      }
+    frameFocus(ms = 0) {
+      go(viewFor(boxOf(focusIds.map(id => meshes.get(id))), undefined, 1.3), ms);
     },
 
-    reset(ms = 700) {
-      api.frameSystem(pickSystem, ms);
+    pause() {
+      running = false;
+      cancelAnimationFrame(raf);
     },
 
-    start() {
+    resume() {
+      if (running) return;
+      running = true;
       resize();
       raf = requestAnimationFrame(frame);
-    },
-
-    dispose() {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-      controls.dispose();
-      composer.dispose();
-      renderer.dispose();
     },
   };
   return api;

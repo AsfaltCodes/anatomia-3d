@@ -42,24 +42,40 @@ Pentru că folosește doar căi relative, site-ul poate fi publicat pe GitHub Pa
 
 ## 3. Cum se joacă
 
-### Ecranul de start
-Pe ecranul de start se rotește un schelet 3D desenat în stil **dither** (din puncte alb-negru, ca o imagine tipărită). Apasă **Începe**.
+### Pagina principală
+Pagina principală arată direct toate quizurile, sub formă de carduri, grupate pe sisteme (oase, mușchi, sistemul nervos). Fiecare sistem are un card pentru tot sistemul și câte un card pentru fiecare regiune a corpului (de exemplu „Oasele capului” sau „Mușchii membrului inferior”). Imaginea de pe card este regiunea respectivă, desenată în stil **dither** (din puncte roz pe alb); când treci cu mouse-ul peste card, ea se rotește.
 
-### Meniul
-Alegi trei lucruri:
+Pe card scrie și câte structuri are quizul și, dacă l-ai jucat deja, cel mai bun scor.
 
-1. **Sistemul**: oase, mușchi sau sistemul nervos.
-2. **Modul de joc**:
-   - **Găsește structura** — apare un nume (de exemplu „Femurul”) și dai click pe structura respectivă pe corp;
-   - **Numește structura** — o structură este evidențiată cu roșu și trebuie să-i spui numele, fie alegând din 4 variante, fie scriindu-l;
-   - **Explorează** — fără scor: treci cu mouse-ul peste corp ca să vezi numele și dai click pentru o scurtă descriere.
-3. **Nivelul de detaliu**:
-   - **Principale** — doar structurile importante (nivelul 1);
-   - **Toate** — toate structurile sistemului;
-   - **Progresiv** — începi cu cele principale, iar dacă obții cel puțin 80% se adaugă și restul.
+### Bara de sus
+- **Oase / Mușchi / Sistemul nervos** — meniuri care listează quizurile fiecărui sistem;
+- **Căutare** — scrii un nume de quiz sau de structură (de exemplu „femur”) și primești linkuri directe spre quizul potrivit;
+- **RO / EN** — schimbă limba.
+
+Pe telefon, toate acestea se găsesc în meniul ☰.
+
+### Pagina de joc
+Modelul 3D ocupă tot ecranul, între două bare subțiri:
+
+- **sus** — întrebarea („Găsește Femurul”), progresul (4/29), încercările rămase, timpul și scorul;
+- **jos** — modul de joc, nivelul, butonul **Straturi**, **Resetează vederea** și **Sari peste**.
+
+Structurile din regiunea quizului sunt colorate normal; restul sistemului se vede estompat, ca să știi unde te afli pe corp, dar nu se poate selecta.
+
+**Modurile de joc:**
+- **Găsește** — apare un nume și dai click pe structura respectivă;
+- **Numește** — o structură este evidențiată cu roz și îi spui numele, alegând din 4 variante sau scriindu-l;
+- **Explorează** — fără scor: atingi o structură și vezi numele și o scurtă descriere.
+
+**Nivelurile** (apar doar la quizurile unde au sens):
+- **Principale** — doar structurile importante;
+- **Toate** — toate structurile din quiz;
+- **Progresiv** — începi cu cele principale, iar dacă obții cel puțin 80% se adaugă și restul.
+
+La final apare o fereastră cu scorul, timpul și butoanele **Joacă din nou** și **Alege alt quiz**.
 
 ### Punctajul
-La fel ca în Seterra, ai **3 încercări** pentru fiecare structură:
+Ai **3 încercări** pentru fiecare structură:
 
 | Răspuns corect la… | Puncte |
 |---|---|
@@ -70,14 +86,15 @@ La fel ca în Seterra, ai **3 încercări** pentru fiecare structură:
 
 Scorul final este media acestor puncte, în procente. **Timpul** este afișat separat și nu schimbă scorul. Cel mai bun rezultat se salvează în browser: un rezultat e „record nou” dacă are procentul mai mare sau, la procent egal, timpul mai mic.
 
-După a treia greșeală, structura corectă clipește cu roșu, iar camera „zboară” spre ea ca să vezi unde era.
+După a treia greșeală, structura corectă clipește cu roz, iar camera „zboară” spre ea ca să vezi unde era.
 
 ### Controale
 - **Trage** cu mouse-ul pentru a roti corpul, **scroll** pentru zoom;
+- pe telefon: **un deget** rotește, **două degete** fac zoom și mută modelul;
 - un click doar contează dacă nu ai mișcat mouse-ul (ca să nu ghicești din greșeală când rotești);
 - un click în gol nu consumă o încercare;
 - panoul **Straturi** ascunde sau arată pielea, mușchii, oasele și sistemul nervos. Dacă ascunzi stratul din care face parte întrebarea, jocul îl reafișează automat;
-- **Vedere din față** readuce camera în poziția inițială.
+- **Resetează vederea** readuce camera în poziția inițială.
 
 ### Răspunsuri scrise
 Când scrii numele, jocul este „îngăduitor”:
@@ -92,15 +109,16 @@ Când scrii numele, jocul este „îngăduitor”:
 index.html            pagina principală
 css/style.css         stilul: culori, fonturi, așezare în pagină
 js/
-  main.js             ecranele jocului și legătura dintre ele
+  main.js             bara de sus, pagina principală, pagina de joc și navigarea
   quiz.js             regulile jocului (punctaj, încercări, niveluri)
   scene.js            scena 3D (încărcare modele, rotire, click, evidențiere)
-  dither.js           efectul dither de pe ecranul de start
-  results.js          ecranul cu rezultatul
+  dither.js           imaginile dither de pe carduri
+  results.js          fereastra cu rezultatul
   i18n.js             traducerea RO/EN și verificarea răspunsurilor scrise
   storage.js          salvarea în browser (localStorage)
 data/
   structures.json     lista structurilor anatomice
+  quizzes.json        lista quizurilor (sistem + regiune)
   strings.json        toate textele interfeței, în română și engleză
 assets/models/        modelele 3D (bones, muscles, nerves, skin .glb)
 vendor/               three.js și fonturile, incluse local
@@ -109,29 +127,32 @@ tests/                testele automate
 ```
 
 ### `index.html`
-Conține doar „scheletul” paginii: bara de sus (logo + butoanele RO/EN), zona `#app` în care se desenează ecranele și subsolul cu sursa modelelor. Un **import map** spune browserului unde găsește biblioteca three.js (`vendor/three/`).
+Conține doar „scheletul” paginii: bara de sus (logo, meniuri, căutare, RO/EN, butonul ☰ pentru telefon) și zona `#app` în care se desenează paginile. Un **import map** spune browserului unde găsește biblioteca three.js (`vendor/three/`).
 
 ### `css/style.css`
-Toate culorile sunt definite o singură dată, ca variabile: `--paper` (fundalul, culoarea hârtiei), `--ink` (cerneala, negru), `--accent` (roșul folosit doar pentru evidențiere, greșeli și răspunsul corect). Fonturile sunt **Instrument Serif** pentru titluri și **Inter** pentru text. La final, o regulă `@media` rearanjează elementele pe ecrane mici (telefon).
+Toate culorile sunt definite o singură dată, ca variabile: `--bg` (alb), `--ink` (textul), `--muted` (text secundar), `--line` (contururi) și `--pink`, singura culoare de accent, folosită pentru butoane, structura căutată, progres și imaginile de pe carduri. Tot site-ul folosește un singur font, **Inter**.
+
+Pagina de joc este un grid pe toată înălțimea ecranului (`100dvh`): bara de întrebare, modelul și bara de unelte. Regulile `@media` de la final ascund meniurile în ☰ sub 860px lățime și transformă butoanele în iconițe sub 560px.
 
 ### `js/main.js`
-Este „dirijorul” jocului. Fiecare ecran este un obiect cu două funcții, `enter()` (desenează ecranul) și `leave()` (curăță în urmă), iar funcția `show(ecran)` trece de la unul la altul:
+Este „dirijorul” site-ului. Adresa paginii decide ce se afișează (**routing** cu `#`):
 
-- `titleScreen()` — ecranul de start cu scheletul dither;
-- `menuScreen()` — meniul cu alegerile, care ține minte ultima selecție;
-- `gameScreen(config)` — jocul propriu-zis, în toate cele trei moduri;
-- `resultsScreen(...)` — rezultatul.
+- `#/` — pagina principală (`homePage()`);
+- `#/quiz/bones-head` — pagina de joc pentru quizul cu id-ul `bones-head` (`playPage(quiz)`).
 
-Când schimbi limba, fiecare ecran are o funcție `relabel()` care rescrie textele fără să piardă progresul jocului.
+Așa, fiecare card e un link adevărat, iar butonul **Înapoi** al browserului funcționează. Fiecare pagină este un obiect cu `enter()` (desenează pagina), `leave()` (oprește cronometrul, animațiile și scena 3D) și `relabel()` (rescrie textele când schimbi limba, fără să piardă progresul).
+
+Tot aici sunt `renderNav()` (meniurile din bara de sus) și `searchResults(text)` (căutarea în quizuri și structuri).
 
 ### `js/quiz.js`
 Conține **doar regulile**, fără nimic grafic, ca să poată fi testate separat:
 
-- `createQuiz({ structures, system, mode, detail })` creează un joc nou: alege structurile potrivite și le amestecă;
+- `createQuiz({ structures, system, region, mode, detail })` creează un joc nou: alege structurile sistemului (și ale regiunii, dacă e dată) și le amestecă;
 - `quiz.answer(id)` primește răspunsul și întoarce `correct`, `wrong`, `reveal` (a treia greșeală) sau `ignored` (click în gol);
 - `quiz.skip()` sare peste întrebare (0 puncte);
 - `quiz.score()` calculează procentul;
 - `quiz.choices(4)` alege 4 variante pentru modul „Numește structura”, din același nivel;
+- `availableDetails(structuri)` spune ce niveluri are sens să oferim (de exemplu, un quiz în care toate structurile sunt principale are doar nivelul „Toate”);
 - `isBetter(a, b)` decide dacă un rezultat e record nou.
 
 Amestecarea folosește algoritmul **Fisher–Yates**: parcurge lista de la coadă la cap și schimbă fiecare element cu unul ales la întâmplare dintre cele dinaintea lui.
@@ -143,15 +164,17 @@ Se ocupă de tot ce e 3D, folosind biblioteca **three.js**:
 - `createScene(canvas, structures)` creează scena, lumina, camera și controalele de rotire (`OrbitControls`);
 - `setLayer(system, vizibil)` ascunde sau arată un strat;
 - `onPick(...)` și `onHover(...)` anunță pe ce structură ai dat click sau ai trecut cu mouse-ul;
-- `highlight(id, stare)` colorează o structură (`target` = clipește roșu, `wrong` = roșu, `correct` = gri închis);
+- `setFocus(sistem, id-uri)` face selectabile doar structurile quizului și estompează restul sistemului;
+- `highlight(id, stare)` colorează o structură (`target` = clipește roz, `correct` = roz, `wrong` = gri închis);
 - `flyTo(id)` mută lin camera spre o structură;
-- `frameSystem(system)` încadrează tot sistemul în ecran.
+- `frameFocus()` încadrează regiunea quizului în ecran;
+- `pause()` / `resume()` opresc și pornesc desenarea când ieși sau intri pe pagina de joc.
 
 ### `js/dither.js`
-Creează efectul de pe ecranul de start (explicat la secțiunea 5).
+Desenează imaginile de pe carduri (explicat la secțiunea 5). Folosește **un singur** context WebGL pentru toate cardurile: desenează fiecare regiune pe o pânză ascunsă și o copiază apoi în cardul ei. Doar cardul de sub mouse este redesenat continuu, ca să se rotească.
 
 ### `js/results.js`
-Afișează scorul cu o animație de numărare (de la 0 la scorul final), timpul, eticheta „Record nou” și, la 100%, o mică „explozie” de pătrățele roșii. Tot aici se salvează recordul.
+Afișează, într-o fereastră peste model (`<dialog>`), scorul cu o animație de numărare, timpul, eticheta „Record nou” și, la 100%, o mică „explozie” de pătrățele roz. Tot aici se salvează recordul.
 
 ### `js/i18n.js`
 - `t(cheie)` întoarce textul în limba curentă din `strings.json`;
@@ -170,6 +193,7 @@ Fiecare structură arată așa:
 {
   "id": "femur",
   "system": "bones",
+  "region": "lower-limb",
   "tier": 1,
   "src": ["femur"],
   "name": { "ro": "Femurul", "en": "Femur" },
@@ -177,13 +201,14 @@ Fiecare structură arată așa:
 }
 ```
 
+- `region` este regiunea corpului, adică quizul regional în care apare structura;
 - `tier` este nivelul (1 = principal, 2 = detaliu);
 - `src` sunt numele în engleză din baza de date BodyParts3D din care se construiește modelul acelei structuri.
 
 ## 5. Cum funcționează partea 3D
 
 ### Scena
-O scenă three.js are trei elemente de bază: **scena** (obiectele), **camera** (de unde privim) și **renderer-ul** (cel care desenează imaginea de 60 de ori pe secundă). Corpul este luminat de o lumină „cer–pământ” (`HemisphereLight`) și de două lumini direcționale, ca într-un studio foto. Toate structurile folosesc același material mat, în tonuri de hârtie, pentru un stil consecvent.
+O scenă three.js are trei elemente de bază: **scena** (obiectele), **camera** (de unde privim) și **renderer-ul** (cel care desenează imaginea de 60 de ori pe secundă). Corpul este luminat de o lumină „cer–pământ” (`HemisphereLight`) și de două lumini direcționale, ca într-un studio foto. Toate structurile folosesc același material mat, în tonuri neutre deschise, pentru un stil consecvent.
 
 ### Cum știe jocul pe ce ai dat click: raycasting
 Când dai click, poziția mouse-ului este transformată în coordonate de la −1 la 1. Din cameră se „trage” o rază (un **ray**) prin acel punct, iar three.js calculează ce obiecte 3D intersectează raza. Primul obiect lovit este structura pe care ai dat click. Fiecare structură este un obiect separat al cărui nume este chiar `id`-ul ei, deci jocul știe imediat ce ai ales.
@@ -194,8 +219,8 @@ Structura de sub mouse primește un contur negru subțire cu ajutorul unui `Outl
 ### Zborul camerei
 `flyTo` calculează cutia care încadrează structura (`Box3`) și o poziție a camerei de la care se vede bine. Apoi, timp de 0,8 secunde, mută camera treptat cu o curbă de încetinire (*ease-out*): se mișcă repede la început și frânează lin la final.
 
-### Efectul dither de pe prima pagină
-Scheletul este desenat mai întâi normal, în tonuri de gri, iar apoi fiecare pixel trece printr-un **shader** (un mic program care rulează pe placa video) care îl transformă în alb sau negru. Pentru a decide, folosește o **matrice Bayer** de 8×8: un tabel cu praguri diferite, care se repetă pe tot ecranul. Primele 4×4 valori arată așa (împărțite la 16):
+### Efectul dither de pe carduri
+Fiecare regiune este desenată mai întâi normal, în tonuri de gri, iar apoi fiecare pixel trece printr-un **shader** (un mic program care rulează pe placa video) care îl transformă în alb sau roz. Pentru a decide, folosește o **matrice Bayer** de 8×8: un tabel cu praguri diferite, care se repetă pe tot ecranul. Primele 4×4 valori arată așa (împărțite la 16):
 
 ```
  0  8  2 10
@@ -204,7 +229,7 @@ Scheletul este desenat mai întâi normal, în tonuri de gri, iar apoi fiecare p
 15  7 13  5
 ```
 
-Un pixel devine **hârtie** dacă luminozitatea lui e mai mare decât pragul din căsuța corespunzătoare și **cerneală** dacă e mai mică. O zonă gri deschis are puțini pixeli negri, iar una gri închis are mulți. Așa se obțin nuanțe folosind doar două culori, la fel ca la imprimantele și ecranele vechi. Ca efectul să se vadă clar, pixelii sunt grupați în pătrățele de 2×2.
+Un pixel devine **alb** dacă luminozitatea lui e mai mare decât pragul din căsuța corespunzătoare și **roz** dacă e mai mică. O zonă gri deschis are puțini pixeli roz, iar una gri închis are mulți. Așa se obțin nuanțe folosind doar două culori, la fel ca la imprimantele și ecranele vechi. Ca efectul să se vadă clar, pixelii sunt grupați în pătrățele de 2×2.
 
 ## 6. Datele anatomice
 
@@ -242,7 +267,7 @@ Testele verifică, de exemplu, că punctajul e 100/66/33/0, că un click în gol
 
 - **BodyParts3D**, © The Database Center for Life Science licensed under CC Attribution 4.0 International — <https://dbarchive.biosciencedbc.jp/en/bodyparts3d/>
 - **three.js** — licență MIT — <https://threejs.org>
-- **Instrument Serif** și **Inter** — fonturi cu licență SIL Open Font License (fișierele de licență sunt în `vendor/fonts/`)
+- **Inter** — font cu licență SIL Open Font License (fișierul de licență este în `vendor/fonts/`)
 
 ## 9. Dezvoltări viitoare
 

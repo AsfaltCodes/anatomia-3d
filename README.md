@@ -1,6 +1,6 @@
 # Anatomia 3D
 
-A Seterra-style anatomy quiz in the browser: you get a name and click the part on a rotatable 3D body. It covers bones, muscles and the central nervous system, in Romanian and English.
+An anatomy click quiz in the browser: pick a body region, get a name, and click the part on a rotatable 3D body. It covers bones, muscles and the central nervous system, in Romanian and English.
 
 Full documentation (Romanian): [docs/documentatie.md](docs/documentatie.md)
 
@@ -32,4 +32,4 @@ npm run build:models   # rebuild assets/models from BodyParts3D OBJs in raw/
 
 - Models: BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International
 - [three.js](https://threejs.org) (MIT)
-- Fonts: Instrument Serif and Inter (SIL OFL)
+- Font: Inter (SIL OFL)
