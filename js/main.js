@@ -55,7 +55,6 @@ function footer() {
       <a href="#/confidentialitate">${t('footer.privacy')}</a>
     </nav>
     <p>${t('app.credits')}</p>
-    <p>© 2026 Anatomia 3D · ${t('footer.made')}</p>
   </footer>`;
 }
 
