@@ -264,7 +264,9 @@ function homePage() {
     </a>`;
   }
 
-  const cardSpin = el => ({ canvas: el.querySelector('.thumb'), quizId: el.dataset.quiz });
+  // Each card starts at a slightly different angle (fixed by its place in the list), so they don't turn in lockstep.
+  const phaseOf = el => [...app.querySelectorAll('.card')].indexOf(el) * 0.9;
+  const cardSpin = el => ({ canvas: el.querySelector('.thumb'), quizId: el.dataset.quiz, phase: phaseOf(el) });
 
   function spinCard(el) {
     if (!thumbs || reducedMotion.matches || el === spinning) return;
@@ -280,7 +282,7 @@ function homePage() {
       const r = el.getBoundingClientRect();
       return r.bottom > 0 && r.top < innerHeight;
     });
-    thumbs.spin(visible.map((el, i) => ({ ...cardSpin(el), phase: i * 0.9 })));
+    thumbs.spin(visible.map(cardSpin), { fps: 30 });
   }
   const onScroll = () => { scrollFrame ||= requestAnimationFrame(spinVisibleCards); };
 
@@ -289,7 +291,7 @@ function homePage() {
     spinning = null;
     app.querySelectorAll('.card').forEach(el => {
       const canvas = el.querySelector('.thumb');
-      thumbs.draw(canvas, el.dataset.quiz);
+      thumbs.draw(canvas, el.dataset.quiz, phaseOf(el));
       canvas.classList.add('drawn');
       if (noHover.matches) return;
       el.addEventListener('pointerenter', () => spinCard(el));

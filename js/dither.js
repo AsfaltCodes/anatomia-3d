@@ -94,6 +94,9 @@ export async function createThumbnails(structures, quizzes) {
     return [quiz.id, { system: quiz.system, ids, box: boxOf(meshes) }];
   }));
 
+  let lastW = 0;
+  let lastH = 0;
+
   function render(canvas, quizId, angle) {
     const { clientWidth: w, clientHeight: h } = canvas;
     if (!w || !h) return;
@@ -107,11 +110,16 @@ export async function createThumbnails(structures, quizzes) {
     pivot.children.forEach(g => g.position.set(-center.x, -center.y, -center.z));
     pivot.rotation.y = angle;
 
-    renderer.setSize(w, h, false);
-    composer.setSize(w, h);
-    dither.uniforms.resolution.value.set(w * dpr, h * dpr);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    // Resizing a WebGL canvas reallocates its buffers, so only do it when the card size changes.
+    if (w !== lastW || h !== lastH) {
+      renderer.setSize(w, h, false);
+      composer.setSize(w, h);
+      dither.uniforms.resolution.value.set(w * dpr, h * dpr);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      lastW = w;
+      lastH = h;
+    }
     const radius = Math.max(size.y, size.x / camera.aspect, size.z / camera.aspect) / 2;
     camera.position.set(0, 0, radius / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.12);
     camera.lookAt(0, 0, 0);
@@ -121,16 +129,31 @@ export async function createThumbnails(structures, quizzes) {
     canvas.getContext('2d').drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height);
   }
 
-  // Each spinning card is { canvas, quizId, phase }; one loop redraws them all.
+  // Every card remembers its own angle, which only advances while it spins,
+  // so a card that leaves the screen and comes back carries on where it stopped.
+  const angles = new WeakMap();
+  const angleOf = (canvas, phase = 0) => {
+    if (!angles.has(canvas)) angles.set(canvas, START_ANGLE + phase);
+    return angles.get(canvas);
+  };
   let spinning = [];
   let raf = 0;
-  let start = 0;
+  let last = 0;
+  let minFrameMs = 0;
+
   function spin(now) {
     spinning = spinning.filter(c => c.canvas.isConnected);
     if (!spinning.length) { raf = 0; return; }
-    const angle = START_ANGLE + SPIN_SPEED * (now - start) / 1000;
-    spinning.forEach(c => render(c.canvas, c.quizId, angle + c.phase));
     raf = requestAnimationFrame(spin);
+    const dt = now - last;
+    if (dt < minFrameMs) return;
+    last = now;
+    const step = SPIN_SPEED * Math.min(dt, 100) / 1000;
+    for (const c of spinning) {
+      const angle = angleOf(c.canvas, c.phase) + step;
+      angles.set(c.canvas, angle);
+      render(c.canvas, c.quizId, angle);
+    }
   }
 
   return {
@@ -138,15 +161,15 @@ export async function createThumbnails(structures, quizzes) {
       dither.uniforms.ink.value.copy(rgb(dark ? 0xf0508c : 0xe6397a));
       dither.uniforms.paper.value.copy(rgb(dark ? 0x141216 : 0xffffff));
     },
-    draw(canvas, quizId) {
-      render(canvas, quizId, START_ANGLE);
+    draw(canvas, quizId, phase = 0) {
+      render(canvas, quizId, angleOf(canvas, phase));
     },
-    spin(cards) {
-      const keep = new Set(cards.map(c => c.canvas));
-      spinning.filter(c => !keep.has(c.canvas) && c.canvas.isConnected).forEach(c => render(c.canvas, c.quizId, START_ANGLE));
-      spinning = cards.map(c => ({ phase: 0, ...c }));
+    // cards: [{ canvas, quizId, phase }]. Cards that stop spinning keep their last frame.
+    spin(cards, { fps = 60 } = {}) {
+      spinning = cards;
+      minFrameMs = 1000 / fps - 2;
       if (!spinning.length) { cancelAnimationFrame(raf); raf = 0; return; }
-      if (!raf) { start = performance.now(); raf = requestAnimationFrame(spin); }
+      if (!raf) { last = performance.now(); raf = requestAnimationFrame(spin); }
     },
     stop() {
       this.spin([]);
