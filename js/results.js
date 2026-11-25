@@ -19,6 +19,7 @@ function countUp(el, to, ms = 1200) {
 
 // A burst of square "dither dots" in the accent colour, snapped to a 4px grid.
 function celebrate(canvas) {
+  if (!canvas.isConnected) return;
   const ctx = canvas.getContext('2d');
   const { width, height } = canvas.getBoundingClientRect();
   canvas.width = width;
@@ -32,6 +33,7 @@ function celebrate(canvas) {
   const start = performance.now();
   function step(now) {
     const k = (now - start) / 1500;
+    if (!canvas.isConnected) return;
     ctx.clearRect(0, 0, width, height);
     if (k >= 1) return;
     ctx.fillStyle = accent;
@@ -67,7 +69,8 @@ export function showResults(container, { score, timeMs, key, onAgain, onMenu }) 
       </div>
     </section>`;
   countUp(container.querySelector('.score span'), score);
-  if (score === 100) setTimeout(() => celebrate(container.querySelector('canvas')), 900);
+  const confetti = container.querySelector('.results canvas');
+  if (score === 100) setTimeout(() => celebrate(confetti), 900);
   container.querySelector('[data-again]').onclick = onAgain;
   container.querySelector('[data-menu]').onclick = onMenu;
 }

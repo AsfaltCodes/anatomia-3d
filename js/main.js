@@ -54,7 +54,11 @@ function titleScreen() {
       });
     },
     leave() { title?.dispose(); },
-    relabel() { show(titleScreen()); },
+    relabel() {
+      app.querySelector('.title .eyebrow').textContent = t('app.tagline');
+      app.querySelector('.title .lead').textContent = t('app.lead');
+      app.querySelector('[data-start]').firstChild.textContent = `${t('title.start')} `;
+    },
   };
 }
 
@@ -127,6 +131,8 @@ function gameScreen(config) {
   let locked = false;
   let selected = null;
   let el = {};
+  const timers = new Set();
+  const later = (fn, ms) => timers.add(setTimeout(fn, ms));
 
   function layout() {
     app.innerHTML = `
@@ -260,11 +266,11 @@ function gameScreen(config) {
 
     if (result === 'wrong') {
       renderTries(tries);
-      if (button) button.classList.add('wrong');
+      if (button) { button.classList.add('wrong'); button.disabled = true; }
       if (mode === 'click') {
         scene.highlight(id, 'wrong');
         el.title.classList.add('flash-wrong');
-        setTimeout(() => { el.title.classList.remove('flash-wrong'); scene.highlight(id, null); }, FEEDBACK_MS);
+        later(() => { el.title.classList.remove('flash-wrong'); scene.highlight(id, null); }, FEEDBACK_MS);
       }
       return result;
     }
@@ -276,7 +282,7 @@ function gameScreen(config) {
     rightButton?.classList.add('right');
     if (result === 'correct') {
       if (mode === 'click') scene.highlight(target.id, 'correct');
-      setTimeout(nextPrompt, FEEDBACK_MS);
+      later(nextPrompt, FEEDBACK_MS);
     } else {
       if (mode === 'click') {
         el.eyebrow.textContent = t('game.answer');
@@ -285,7 +291,7 @@ function gameScreen(config) {
       } else {
         el.title.textContent = nameOf(target);
       }
-      setTimeout(() => nextPrompt(true), REVEAL_MS);
+      later(() => nextPrompt(true), REVEAL_MS);
     }
     return result;
   }
@@ -377,6 +383,7 @@ function gameScreen(config) {
     },
     leave() {
       clearInterval(timer);
+      timers.forEach(clearTimeout);
       handlers.pick = handlers.hover = null;
       scene?.clearHighlights();
     },

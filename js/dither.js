@@ -116,6 +116,7 @@ export async function createTitle(canvas) {
       observer.disconnect();
       composer.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
     },
   };
 }
