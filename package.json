@@ -1,0 +1,19 @@
+{
+  "name": "anatomia-3d",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:models": "node tools/build-models.mjs",
+    "check:data": "node tools/check-data.mjs",
+    "check:strings": "node tools/check-strings.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "serve": "npx serve ."
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^0.22.0",
+    "three": "^0.170.0"
+  }
+}

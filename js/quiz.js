@@ -1,0 +1,78 @@
+const POINTS = [100, 66, 33, 0];
+const MAX_TRIES = 3;
+const UNLOCK_SCORE = 80;
+
+export function shuffle(items, rng = Math.random) {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export function createQuiz({ structures, system, mode, detail, rng = Math.random }) {
+  const inSystem = structures.filter(s => s.system === system);
+  const tiers = [...new Set(inSystem.map(s => s.tier))].sort();
+  let tierIndex = 0;
+  const ofTier = tier => shuffle(inSystem.filter(s => s.tier === tier), rng);
+
+  let queue = detail === 'all' ? shuffle(inSystem, rng) : ofTier(tiers[0]);
+  let position = 0;
+  let tries = 0;
+  const points = [];
+
+  function next(earned) {
+    points.push(earned);
+    position++;
+    tries = 0;
+    if (position === queue.length && detail === 'progressive' && score() >= UNLOCK_SCORE && tierIndex < tiers.length - 1) {
+      tierIndex++;
+      queue = queue.concat(ofTier(tiers[tierIndex]));
+    }
+  }
+
+  function score() {
+    if (!points.length) return 0;
+    return Math.round(points.reduce((a, b) => a + b, 0) / points.length);
+  }
+
+  return {
+    mode,
+    get current() { return queue[position] ?? null; },
+    get finished() { return position >= queue.length; },
+    get progress() { return { done: position, total: queue.length }; },
+    score,
+
+    answer(id) {
+      const target = queue[position];
+      if (id == null || !target) return { result: 'ignored', tries };
+      tries++;
+      if (id === target.id) {
+        const used = tries;
+        next(POINTS[used - 1]);
+        return { result: 'correct', tries: used };
+      }
+      if (tries >= MAX_TRIES) {
+        next(0);
+        return { result: 'reveal', tries: MAX_TRIES };
+      }
+      return { result: 'wrong', tries };
+    },
+
+    skip() {
+      if (queue[position]) next(0);
+    },
+
+    choices(n = 4) {
+      const target = queue[position];
+      const others = shuffle(inSystem.filter(s => s !== target), rng).slice(0, n - 1);
+      return shuffle([target, ...others], rng);
+    },
+  };
+}
+
+export function isBetter(a, b) {
+  if (!b) return true;
+  return a.score > b.score || (a.score === b.score && a.timeMs < b.timeMs);
+}
