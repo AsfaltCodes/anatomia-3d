@@ -16,6 +16,14 @@ npx serve .
 
 Everything is bundled locally (three.js, fonts, models), so it works offline.
 
+## Deploy to GitHub Pages
+
+1. Push the repository to GitHub (models are about 4 MB in total, well under the limits).
+2. Settings → Pages → Source: *Deploy from a branch*, branch `main`, folder `/ (root)`.
+3. Open `https://<user>.github.io/<repo>/`.
+
+All paths are relative and routing uses `#/…`, so no 404 fallback or build step is needed. `.nojekyll` makes Pages serve every file as-is.
+
 ## Develop
 
 ```bash

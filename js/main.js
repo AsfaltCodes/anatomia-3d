@@ -1,9 +1,10 @@
 import { t, setStrings, setLang, getLang, nameOf, descOf, matches, normalize } from './i18n.js';
 import { load, save } from './storage.js';
-import { createQuiz, availableDetails } from './quiz.js';
+import { createQuiz, availableDetails, isComplete } from './quiz.js';
 import { createScene, SYSTEMS, hasWebGL } from './scene.js';
 import { createThumbnails } from './dither.js';
 import { showResults, formatTime } from './results.js';
+import { logoSVG, drawStar } from './logo.js';
 
 const app = document.getElementById('app');
 const nav = document.querySelector('.systems');
@@ -28,10 +29,33 @@ const quizName = q => q.name[getLang()];
 const poolOf = q => structures.filter(s => s.system === q.system && (!q.region || s.region === q.region));
 const quizFor = s => quizzes.find(q => q.system === s.system && q.region === s.region);
 const bestKey = (quizId, mode, detail) => `best:${quizId}:${mode}:${detail}`;
-const bestOf = q => ['main', 'all', 'progressive']
+// A card only shows runs that covered the whole quiz, so 100% always means every part.
+const bestOf = q => ['all', 'progressive', 'main']
   .map(d => load(bestKey(q.id, 'click', d), null))
-  .filter(Boolean)
+  .filter(r => isComplete(r, poolOf(q).length))
   .reduce((a, b) => (!a || b.score > a.score ? b : a), null);
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const noHover = matchMedia('(hover: none)');
+
+function toast(text) {
+  const node = document.createElement('div');
+  node.className = 'toast';
+  node.textContent = text;
+  document.querySelector('.toasts').append(node);
+  setTimeout(() => node.remove(), 2600);
+}
+
+function footer() {
+  return `<footer class="site-footer">
+    <nav aria-label="Footer">
+      <a href="#/" data-top>${t('footer.quizzes')}</a>
+      <a href="#/despre">${t('footer.about')}</a>
+      <a href="#/confidentialitate">${t('footer.privacy')}</a>
+    </nav>
+    <p>${t('app.credits')}</p>
+    <p>© 2026 Anatomia 3D · ${t('footer.made')}</p>
+  </footer>`;
+}
 
 const ICONS = {
   layers: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 2 7l8 4 8-4-8-4Zm-6.5 7L2 10.8l8 4 8-4-1.5-.8L10 13 3.5 10Zm0 3L2 13.8l8 4 8-4-1.5-.8L10 16l-6.5-3Z"/></svg>',
@@ -108,15 +132,53 @@ function attachSearch(box) {
 
 /* ---------- Router ---------- */
 
+const INFO_ROUTES = { '#/despre': 'about', '#/confidentialitate': 'privacy' };
+
 function route() {
   closeMenus();
   page?.leave?.();
   const match = location.hash.match(/^#\/quiz\/([\w-]+)$/);
   const quiz = match && quizzes.find(q => q.id === match[1]);
-  page = match ? (quiz ? playPage(quiz) : notFound()) : homePage();
-  document.body.dataset.page = match ? 'play' : 'home';
+  const info = INFO_ROUTES[location.hash];
+  if (match) page = quiz ? playPage(quiz) : notFound();
+  else if (info) page = infoPage(info);
+  else page = homePage();
+  document.body.dataset.page = match ? 'play' : 'page';
+  if (page !== homeInstance) window.scrollTo(0, 0);
   page.enter();
-  window.scrollTo(0, 0);
+  setTitle();
+}
+
+function setTitle() {
+  const quiz = location.hash.startsWith('#/quiz/') && quizzes.find(q => location.hash === `#/quiz/${q.id}`);
+  const info = INFO_ROUTES[location.hash];
+  const label = quiz ? quizName(quiz) : info ? t(`${info}.title`) : '';
+  document.title = label ? `${label} · Anatomia 3D` : 'Anatomia 3D';
+}
+
+function infoPage(kind) {
+  const paragraphs = text => text.split('\n\n').map(p => `<p>${escape(p).replace(/\n/g, '<br>')}</p>`).join('');
+  const self = {
+    enter() {
+      app.innerHTML = `
+        <article class="info">
+          <h1>${t(`${kind}.title`)}</h1>
+          ${paragraphs(t(`${kind}.body`))}
+          ${kind === 'about' ? `<h2>${t('about.sources')}</h2>${paragraphs(t('about.licenses'))}` : ''}
+          ${kind === 'privacy' ? `<button class="btn" data-reset-progress>${t('privacy.reset')}</button>` : ''}
+        </article>
+        ${footer()}`;
+      app.querySelector('[data-reset-progress]')?.addEventListener('click', () => {
+        if (!confirm(t('privacy.confirm'))) return;
+        try {
+          Object.keys(localStorage).filter(k => k.startsWith('best:')).forEach(k => localStorage.removeItem(k));
+        } catch {}
+        toast(t('privacy.done'));
+      });
+    },
+    relabel() { self.enter(); setTitle(); },
+  };
+  return self;
 }
 
 function notFound() {
@@ -128,58 +190,122 @@ function notFound() {
 
 /* ---------- Home ---------- */
 
+let homeInstance = null;
+let homeScroll = 0;
+
 function homePage() {
   let thumbs = null;
+  let spinning = null;
+  let scrollFrame = 0;
 
   function render() {
+    const complete = quizzes.filter(q => bestOf(q)?.score === 100).length;
     app.innerHTML = `
       <div class="home">
+        <header class="hero">
+          <div class="hero-mark">${logoSVG(96)}</div>
+          <h1>Anatomia 3D</h1>
+          <p class="hero-lead">${t('home.lead')}</p>
+          <div class="search hero-search">
+            <input type="search" autocomplete="off" spellcheck="false">
+            <div class="search-results" role="listbox" hidden></div>
+          </div>
+          <div class="chips">${QUIZ_SYSTEMS.map(s => `<button class="chip" data-jump="${s}">${t(`system.${s}`)}</button>`).join('')}</div>
+          ${complete ? `<p class="hero-progress">${complete} ${t('home.of')} ${quizzes.length} ${t('home.complete')}</p>` : ''}
+        </header>
         ${QUIZ_SYSTEMS.map(system => `
-          <section class="group">
+          <section class="group" id="group-${system}">
             <h2>${t(`system.${system}`)}</h2>
             <div class="cards">${quizzes.filter(q => q.system === system).map(card).join('')}</div>
           </section>`).join('')}
-        <footer class="credits">${t('app.credits')}</footer>
-      </div>`;
+      </div>
+      ${footer()}`;
+    attachSearch(app.querySelector('.hero-search'));
+    app.querySelectorAll('[data-jump]').forEach(b => {
+      b.onclick = () => document.getElementById(`group-${b.dataset.jump}`).scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+    });
+    app.querySelectorAll('.star').forEach(c => drawStar(c));
     drawThumbnails();
   }
 
   function card(q) {
     const best = bestOf(q);
-    return `<a class="card" href="#/quiz/${q.id}" data-quiz="${q.id}">
-      <canvas class="thumb" aria-hidden="true"></canvas>
+    const perfect = best?.score === 100;
+    return `<a class="card${perfect ? ' perfect' : ''}" href="#/quiz/${q.id}" data-quiz="${q.id}">
+      <span class="thumb-wrap">
+        <canvas class="thumb" aria-hidden="true"></canvas>
+        ${perfect ? `<canvas class="star" role="img" aria-label="${t('home.perfect')}" title="${t('home.perfect')}"></canvas>` : ''}
+      </span>
       <span class="card-body">
         <span class="card-title">${escape(quizName(q))}</span>
-        <span class="card-meta">${poolOf(q).length} ${t('home.parts')}${best ? `<span class="card-best">${t('home.best')} ${best.score}%</span>` : ''}</span>
+        <span class="card-meta">
+          <span>${poolOf(q).length} ${t('home.parts')}</span>
+          <span class="${best ? 'card-best' : ''}">${best ? `${t('home.best')} ${best.score}%` : t('home.notPlayed')}</span>
+        </span>
+        <span class="card-progress" aria-hidden="true"><i style="width:${best ? best.score : 0}%"></i></span>
       </span>
     </a>`;
   }
 
+  function spinCard(el) {
+    if (!thumbs || reducedMotion.matches || el === spinning) return;
+    spinning = el;
+    if (el) thumbs.spin(el.querySelector('.thumb'), el.dataset.quiz);
+    else thumbs.stop();
+  }
+
+  // Touch screens can't hover, so the card nearest the middle of the screen spins instead.
+  function spinCentreCard() {
+    scrollFrame = 0;
+    if (!noHover.matches || page !== self) return;
+    const middle = innerHeight / 2;
+    let best = null;
+    let bestDistance = Infinity;
+    app.querySelectorAll('.card').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const d = Math.abs(r.top + r.height / 2 - middle);
+      if (d < bestDistance) { bestDistance = d; best = el; }
+    });
+    spinCard(best);
+  }
+  const onScroll = () => { scrollFrame ||= requestAnimationFrame(spinCentreCard); };
+
   function drawThumbnails() {
     if (!thumbs) return;
+    spinning = null;
     app.querySelectorAll('.card').forEach(el => {
-      const canvas = el.querySelector('canvas');
+      const canvas = el.querySelector('.thumb');
       thumbs.draw(canvas, el.dataset.quiz);
-      const spin = () => thumbs.spin(canvas, el.dataset.quiz);
-      el.addEventListener('pointerenter', spin);
-      el.addEventListener('focus', spin);
-      el.addEventListener('pointerleave', () => thumbs.stop());
-      el.addEventListener('blur', () => thumbs.stop());
+      canvas.classList.add('drawn');
+      if (noHover.matches) return;
+      el.addEventListener('pointerenter', () => spinCard(el));
+      el.addEventListener('focus', () => spinCard(el));
+      el.addEventListener('pointerleave', () => spinCard(null));
+      el.addEventListener('blur', () => spinCard(null));
     });
+    spinCentreCard();
   }
 
   const self = {
     enter() {
       render();
+      requestAnimationFrame(() => window.scrollTo(0, homeScroll));
+      addEventListener('scroll', onScroll, { passive: true });
       thumbsPromise ??= createThumbnails(structures, quizzes).catch(() => null);
       thumbsPromise.then(result => {
         thumbs = result;
         if (page === self) drawThumbnails();
       });
     },
-    leave() { thumbs?.stop(); },
+    leave() {
+      homeScroll = scrollY;
+      removeEventListener('scroll', onScroll);
+      thumbs?.stop();
+    },
     relabel: render,
   };
+  homeInstance = self;
   return self;
 }
 
@@ -203,8 +329,8 @@ function playPage(quizDef) {
   const pool = poolOf(quizDef);
   const byId = new Map(structures.map(s => [s.id, s]));
   const details = availableDetails(pool);
-  let mode = MODES.includes(load('mode', 'click')) ? load('mode', 'click') : 'click';
-  let detail = details.includes(load('detail', 'main')) ? load('detail', 'main') : details[0];
+  let mode = 'click';
+  let detail = details.includes('all') ? 'all' : details[0];
   let answerStyle = load('answerStyle', 'choices');
   let scene = null;
   let quiz = null;
@@ -221,6 +347,7 @@ function playPage(quizDef) {
     app.innerHTML = `
       <section class="play">
         <div class="promptbar">
+          <a class="back" href="#/"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 4.3 7 10l5.7 5.7-1.4 1.4L4.2 10l7.1-7.1 1.4 1.4Z"/></svg><span>${escape(quizName(quizDef))}</span></a>
           <div class="prompt" aria-live="polite"></div>
           <div class="stats"></div>
           <div class="progress"><div></div></div>
@@ -334,7 +461,7 @@ function playPage(quizDef) {
     const totalBefore = quiz.progress.total;
     const { result, tries } = quiz.answer(id);
     if (result === 'ignored') return result;
-    if (quiz.progress.total > totalBefore) toast(t('play.unlocked'));
+    if (quiz.progress.total > totalBefore) stageToast(t('play.unlocked'));
 
     if (result === 'wrong') {
       renderStats(tries);
@@ -371,15 +498,16 @@ function playPage(quizDef) {
       title: quizName(quizDef),
       score: quiz.score(),
       timeMs: performance.now() - startedAt,
+      total: quiz.progress.total,
       key: bestKey(quizDef.id, mode, detail),
       onAgain: start,
       onAnother: () => { location.hash = '#/'; },
     });
   }
 
-  function toast(text) {
+  function stageToast(text) {
     const node = document.createElement('div');
-    node.className = 'toast';
+    node.className = 'stage-toast';
     node.textContent = text;
     el.stage.append(node);
     later(() => node.remove(), 2600);
@@ -411,8 +539,8 @@ function playPage(quizDef) {
   }
 
   function wire() {
-    el.root.querySelector('[data-mode]').onchange = e => { mode = e.target.value; save('mode', mode); start(); };
-    el.root.querySelector('[data-detail]').onchange = e => { detail = e.target.value; save('detail', detail); start(); };
+    el.root.querySelector('[data-mode]').onchange = e => { mode = e.target.value; start(); };
+    el.root.querySelector('[data-detail]').onchange = e => { detail = e.target.value; start(); };
     el.root.querySelectorAll('[data-layer]').forEach(box => { box.onchange = () => scene.setLayer(box.dataset.layer, box.checked); });
     el.root.querySelector('[data-reset]').onclick = () => scene.frameFocus(600);
     el.root.querySelector('[data-skip]').onclick = () => {
@@ -426,7 +554,13 @@ function playPage(quizDef) {
       if (s) setPrompt(t(`system.${s.system}`), nameOf(s));
       else renderPrompt();
     };
+    let lastEmptyTap = 0;
     handlers.pick = id => {
+      if (!id) {
+        const now = performance.now();
+        if (now - lastEmptyTap < 350) scene.frameFocus(500);
+        lastEmptyTap = now;
+      }
       if (mode === 'click') return answer(id, null);
       if (mode !== 'learn') return;
       scene.clearHighlights();
@@ -470,6 +604,7 @@ function playPage(quizDef) {
       el.root.querySelector('.layers .label').textContent = t('play.layers');
       el.root.querySelector('[data-reset] .label').textContent = t('play.reset');
       el.root.querySelector('[data-skip] .label').textContent = t('play.skip');
+      el.root.querySelector('.back span').textContent = quizName(quizDef);
       if (locked || (quiz && quiz.finished)) return;
       if (mode === 'name' && quiz) {
         el.sheet.querySelectorAll('[data-choice]').forEach(b => { b.textContent = nameOf(byId.get(b.dataset.choice)); });
@@ -494,6 +629,9 @@ async function boot() {
     return;
   }
   document.documentElement.lang = getLang();
+  document.querySelector('.brand-mark').outerHTML = logoSVG(26);
+  const skip = document.querySelector('[data-skip-link]');
+  skip.onclick = e => { e.preventDefault(); app.focus(); };
   renderNav();
   burger.onclick = () => {
     const open = drawer.hidden;
@@ -505,9 +643,16 @@ async function boot() {
     if (!e.target.closest('details.menu')) document.querySelectorAll('details.menu[open]').forEach(d => { d.open = false; });
     if (!e.target.closest('.search')) document.querySelectorAll('.search-results').forEach(r => { r.hidden = true; });
     if (e.target.closest('.drawer a, .menu-panel a')) closeMenus();
+    if (e.target.closest('[data-top]') && location.hash === '#/') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenus(); });
-  document.addEventListener('langchange', () => { renderNav(); page?.relabel?.(); });
+  document.addEventListener('langchange', () => {
+    renderNav();
+    skip.textContent = t('nav.skip');
+    page?.relabel?.();
+    setTitle();
+  });
+  skip.textContent = t('nav.skip');
   window.addEventListener('hashchange', route);
   route();
 }

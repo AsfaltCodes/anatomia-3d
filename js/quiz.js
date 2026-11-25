@@ -79,6 +79,10 @@ export function availableDetails(pool) {
   return main >= 4 && main < pool.length ? ['main', 'all', 'progressive'] : ['all'];
 }
 
+export function isComplete(record, poolSize) {
+  return !!record && record.total === poolSize;
+}
+
 export function isBetter(a, b) {
   if (!b) return true;
   return a.score > b.score || (a.score === b.score && a.timeMs < b.timeMs);

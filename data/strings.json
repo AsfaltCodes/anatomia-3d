@@ -14,6 +14,28 @@
 
   "home.parts": { "ro": "structuri", "en": "parts" },
   "home.best": { "ro": "Record", "en": "Best" },
+  "home.notPlayed": { "ro": "Nejucat", "en": "Not played" },
+  "home.lead": { "ro": "Quizuri de anatomie pe un corp 3D: oase, mușchi și sistemul nervos.", "en": "Anatomy quizzes on a 3D body: bones, muscles and the nervous system." },
+  "home.complete": { "ro": "quizuri complete", "en": "quizzes complete" },
+  "home.of": { "ro": "din", "en": "of" },
+  "home.perfect": { "ro": "100%: toate structurile găsite din prima", "en": "100%: every part found on the first try" },
+
+  "footer.quizzes": { "ro": "Quizuri", "en": "Quizzes" },
+  "footer.about": { "ro": "Despre", "en": "About" },
+  "footer.privacy": { "ro": "Confidențialitate", "en": "Privacy" },
+  "footer.made": { "ro": "Proiect de atestat", "en": "Certificate project" },
+  "nav.skip": { "ro": "Sari la conținut", "en": "Skip to content" },
+
+  "about.title": { "ro": "Despre", "en": "About" },
+  "about.body": { "ro": "Anatomia 3D te ajută să înveți corpul uman prin quizuri. Alegi un quiz, primești numele unei structuri și o găsești pe modelul 3D. Ai trei încercări pentru fiecare structură; scorul arată câte ai găsit și din câte încercări.\n\nModurile de joc sunt Găsește (dai click pe structură), Numește (alegi sau scrii numele structurii evidențiate) și Explorează (fără scor, cu descrieri).\n\nModelele 3D provin din baza de date BodyParts3D, construită din scanări reale ale corpului uman. Ea nu conține nervii periferici și nici câțiva mușchi (marele dorsal, dreptul abdominal, mușchii feței), așa că acestea lipsesc și din quizuri. Denumirile și descrierile în română au fost scrise pentru acest proiect.", "en": "Anatomia 3D helps you learn the human body through quizzes. Pick a quiz, get the name of a part and find it on the 3D model. You have three tries per part; the score shows how many you found and in how many tries.\n\nThe game modes are Find (click the part), Name (pick or type the name of the highlighted part) and Explore (no score, with descriptions).\n\nThe 3D models come from the BodyParts3D database, built from real scans of the human body. It has no peripheral nerves and lacks a few muscles (latissimus dorsi, rectus abdominis, facial muscles), so those are missing from the quizzes too. The Romanian names and descriptions were written for this project." },
+  "about.sources": { "ro": "Surse și licențe", "en": "Sources and licences" },
+  "about.licenses": { "ro": "Modele: BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International.\nBiblioteca 3D: three.js (licență MIT).\nFont: Inter (SIL Open Font License).", "en": "Models: BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International.\n3D library: three.js (MIT licence).\nFont: Inter (SIL Open Font License)." },
+
+  "privacy.title": { "ro": "Confidențialitate", "en": "Privacy" },
+  "privacy.body": { "ro": "Site-ul nu folosește cookie-uri, nu are conturi și nu trimite date nicăieri. Recordurile, limba aleasă și preferințele se păstrează doar în browserul tău (localStorage), pe acest dispozitiv.\n\nDacă vrei să o iei de la capăt, poți șterge tot progresul de mai jos.", "en": "This site uses no cookies, has no accounts and sends no data anywhere. Your records, chosen language and preferences are kept only in your browser (localStorage), on this device.\n\nIf you want to start over, you can delete all progress below." },
+  "privacy.reset": { "ro": "Șterge progresul", "en": "Delete progress" },
+  "privacy.confirm": { "ro": "Ștergi toate recordurile? Acțiunea nu poate fi anulată.", "en": "Delete all records? This can't be undone." },
+  "privacy.done": { "ro": "Progresul a fost șters.", "en": "Progress deleted." },
 
   "mode.label": { "ro": "Mod", "en": "Mode" },
   "mode.click": { "ro": "Găsește", "en": "Find" },
@@ -38,6 +60,7 @@
   "play.layers": { "ro": "Straturi", "en": "Layers" },
   "play.unlocked": { "ro": "Nivel nou: s-au adăugat structurile de detaliu", "en": "Next level: detail parts added" },
   "play.tries": { "ro": "Încercări", "en": "Tries" },
+  "play.back": { "ro": "Quizuri", "en": "Quizzes" },
 
   "results.heading": { "ro": "Rezultat", "en": "Result" },
   "results.time": { "ro": "Timp", "en": "Time" },

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createQuiz, isBetter, availableDetails } from '../js/quiz.js';
+import { createQuiz, isBetter, availableDetails, isComplete } from '../js/quiz.js';
 
 const S = [
   { id: 'a', system: 'bones', tier: 1 },
@@ -111,6 +111,13 @@ test('availableDetails offers levels only when the main tier is a real subset of
   assert.deepEqual(availableDetails(tiers(1, 1, 1, 1, 2)), ['main', 'all', 'progressive']);
   assert.deepEqual(availableDetails(tiers(1, 1, 1, 1)), ['all']);
   assert.deepEqual(availableDetails(tiers(1, 2, 2, 2, 2)), ['all']);
+});
+
+test('isComplete: a record counts for the card only if it covered every part', () => {
+  assert.ok(isComplete({ score: 80, timeMs: 1, total: 13 }, 13));
+  assert.ok(!isComplete({ score: 100, timeMs: 1, total: 7 }, 13));
+  assert.ok(!isComplete({ score: 100, timeMs: 1 }, 13));
+  assert.ok(!isComplete(null, 13));
 });
 
 test('isBetter: higher score wins, a tie goes to the faster time', () => {

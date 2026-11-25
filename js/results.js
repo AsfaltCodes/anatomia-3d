@@ -1,6 +1,7 @@
 import { t } from './i18n.js';
 import { isBetter } from './quiz.js';
 import { load, save } from './storage.js';
+import { drawStar } from './logo.js';
 
 export function formatTime(ms) {
   const s = Math.floor(ms / 1000);
@@ -53,13 +54,14 @@ export function bestScore(key) {
   return load(key, null);
 }
 
-export function showResults(dialog, { title, score, timeMs, key, onAgain, onAnother }) {
+export function showResults(dialog, { title, score, timeMs, total, key, onAgain, onAnother }) {
   const best = load(key, null);
   const record = isBetter({ score, timeMs }, best);
-  if (record) save(key, { score, timeMs });
+  if (record) save(key, { score, timeMs, total });
 
   dialog.innerHTML = `
     <canvas aria-hidden="true"></canvas>
+    ${score === 100 ? '<canvas class="star results-star" aria-hidden="true"></canvas>' : ''}
     <p class="results-title">${title}</p>
     <p class="results-score"><span>0</span>%</p>
     <p class="results-meta">${t('results.time')} ${formatTime(timeMs)}${record ? ` <span class="badge">${t('results.record')}</span>` : ''}</p>
@@ -68,8 +70,10 @@ export function showResults(dialog, { title, score, timeMs, key, onAgain, onAnot
       <button class="btn" data-another>${t('results.another')}</button>
     </div>`;
   dialog.showModal();
+  const star = dialog.querySelector('.results-star');
+  if (star) drawStar(star);
   countUp(dialog.querySelector('.results-score span'), score);
-  const confetti = dialog.querySelector('canvas');
+  const confetti = dialog.querySelector('canvas:not(.star)');
   if (score === 100) setTimeout(() => celebrate(confetti), 500);
   dialog.querySelector('[data-again]').onclick = () => { dialog.close(); onAgain(); };
   dialog.querySelector('[data-another]').onclick = () => { dialog.close(); onAnother(); };

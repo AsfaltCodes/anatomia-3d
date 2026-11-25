@@ -36,16 +36,26 @@ Apoi deschide adresa afișată în terminal (de obicei <http://localhost:3000>).
 
 Jocul funcționează **complet offline**: biblioteca three.js și fonturile sunt incluse în proiect, în folderul `vendor/`.
 
-### Mai târziu: GitHub Pages
+### Publicare pe GitHub Pages
 
-Pentru că folosește doar căi relative, site-ul poate fi publicat pe GitHub Pages fără nicio modificare: urci folderul într-un repository și activezi Pages din setări.
+Pentru că folosește doar căi relative și adrese cu `#`, site-ul poate fi publicat pe GitHub Pages fără nicio modificare:
+
+1. urci proiectul într-un repository pe GitHub;
+2. în **Settings → Pages** alegi *Deploy from a branch*, ramura `main` și folderul `/ (root)`;
+3. după un minut, site-ul apare la `https://<utilizator>.github.io/<repository>/`.
+
+Fișierul gol `.nojekyll` îi spune lui GitHub să servească toate fișierele exact cum sunt.
 
 ## 3. Cum se joacă
 
 ### Pagina principală
-Pagina principală arată direct toate quizurile, sub formă de carduri, grupate pe sisteme (oase, mușchi, sistemul nervos). Fiecare sistem are un card pentru tot sistemul și câte un card pentru fiecare regiune a corpului (de exemplu „Oasele capului” sau „Mușchii membrului inferior”). Imaginea de pe card este regiunea respectivă, desenată în stil **dither** (din puncte roz pe alb); când treci cu mouse-ul peste card, ea se rotește.
+Sus se află titlul, cu logoul (un os desenat din pixeli roz), o căutare mare și trei butoane, **Oase**, **Mușchi** și **Sistemul nervos**, care te duc direct la secțiunea respectivă. Mai jos sunt toate quizurile, sub formă de carduri, grupate pe sisteme. Fiecare sistem are un card pentru tot sistemul și câte un card pentru fiecare regiune a corpului (de exemplu „Oasele capului” sau „Mușchii membrului inferior”). Imaginea de pe card este regiunea respectivă, desenată în stil **dither** (din puncte roz pe alb); când treci cu mouse-ul peste card, ea se rotește.
 
-Pe card scrie și câte structuri are quizul și, dacă l-ai jucat deja, cel mai bun scor.
+Pe card scrie câte structuri are quizul, iar o bară arată **cel mai bun scor** al tău (ca în Seterra). Contează doar jocurile în modul **Găsește** care au trecut prin toate structurile quizului, așa că 100% înseamnă că ai găsit din prima tot ce era de găsit. La 100%, bara devine roz-aurie și pe card apare o **stea** desenată tot din pixeli (dither roz–auriu).
+
+Pe telefon nu există „hover”, așa că se rotește singur cardul aflat în mijlocul ecranului; când derulezi, rotirea trece la următorul card.
+
+Când apeși pe un card, quizul pornește direct în modul **Găsește**, cu **toate** structurile categoriei. Modul și nivelul se pot schimba din bara de jos, doar pentru jocul curent.
 
 ### Bara de sus
 - **Oase / Mușchi / Sistemul nervos** — meniuri care listează quizurile fiecărui sistem;
@@ -90,7 +100,7 @@ După a treia greșeală, structura corectă clipește cu roz, iar camera „zbo
 
 ### Controale
 - **Trage** cu mouse-ul pentru a roti corpul, **scroll** pentru zoom;
-- pe telefon: **un deget** rotește, **două degete** fac zoom și mută modelul;
+- pe telefon: **un deget** rotește, **două degete** fac zoom și mută modelul, iar o **atingere dublă** în gol resetează vederea;
 - un click doar contează dacă nu ai mișcat mouse-ul (ca să nu ghicești din greșeală când rotești);
 - un click în gol nu consumă o încercare;
 - panoul **Straturi** ascunde sau arată pielea, mușchii, oasele și sistemul nervos. Dacă ascunzi stratul din care face parte întrebarea, jocul îl reafișează automat;
@@ -103,6 +113,9 @@ Când scrii numele, jocul este „îngăduitor”:
 - poți omite cuvinte generale ca „Mușchiul” sau „Osul” (`biceps brahial` e acceptat);
 - la nume cu paranteză, de exemplu „Scapula (omoplatul)”, merge oricare dintre variante.
 
+### Despre și Confidențialitate
+În subsolul paginii sunt linkuri spre **Despre** (ce este site-ul, de unde vin datele, licențe) și **Confidențialitate**. Site-ul **nu folosește cookie-uri** și nu trimite date nicăieri, deci nu are nevoie de un banner de consimțământ. Recordurile se păstrează doar în browser (`localStorage`). Pe pagina de confidențialitate există un buton **Șterge progresul**.
+
 ## 4. Structura codului
 
 ```
@@ -114,6 +127,7 @@ js/
   scene.js            scena 3D (încărcare modele, rotire, click, evidențiere)
   dither.js           imaginile dither de pe carduri
   results.js          fereastra cu rezultatul
+  logo.js             logoul (osul din pixeli) și steaua de 100%
   i18n.js             traducerea RO/EN și verificarea răspunsurilor scrise
   storage.js          salvarea în browser (localStorage)
 data/
@@ -152,6 +166,7 @@ Conține **doar regulile**, fără nimic grafic, ca să poată fi testate separa
 - `quiz.skip()` sare peste întrebare (0 puncte);
 - `quiz.score()` calculează procentul;
 - `quiz.choices(4)` alege 4 variante pentru modul „Numește structura”, din același nivel;
+- `isComplete(record, nrStructuri)` spune dacă un record a trecut prin toate structurile quizului (doar acestea apar pe card);
 - `availableDetails(structuri)` spune ce niveluri are sens să oferim (de exemplu, un quiz în care toate structurile sunt principale are doar nivelul „Toate”);
 - `isBetter(a, b)` decide dacă un rezultat e record nou.
 
@@ -175,6 +190,10 @@ Desenează imaginile de pe carduri (explicat la secțiunea 5). Folosește **un s
 
 ### `js/results.js`
 Afișează, într-o fereastră peste model (`<dialog>`), scorul cu o animație de numărare, timpul, eticheta „Record nou” și, la 100%, o mică „explozie” de pătrățele roz. Tot aici se salvează recordul.
+
+### `js/logo.js`
+- `logoSVG(înălțime)` desenează osul din logo: pentru fiecare pătrățel dintr-o grilă de 16×16 verifică dacă e în interiorul formei (un segment pentru corpul osului și patru cercuri pentru capete), apoi îl colorează roz sau roz deschis cu aceeași matrice Bayer ca la carduri;
+- `drawStar(canvas)` desenează steaua de 100%: o stea cu 5 colțuri pe o grilă de 14×14, cu trecere de la roz la auriu făcută prin dither.
 
 ### `js/i18n.js`
 - `t(cheie)` întoarce textul în limba curentă din `strings.json`;
