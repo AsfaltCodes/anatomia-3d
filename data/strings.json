@@ -24,6 +24,8 @@
   "footer.about": { "ro": "Despre", "en": "About" },
   "footer.privacy": { "ro": "Confidențialitate", "en": "Privacy" },
   "footer.made": { "ro": "Proiect de atestat", "en": "Certificate project" },
+  "theme.toLight": { "ro": "Mod luminos", "en": "Light mode" },
+  "theme.toDark": { "ro": "Mod întunecat", "en": "Dark mode" },
   "nav.skip": { "ro": "Sari la conținut", "en": "Skip to content" },
 
   "about.title": { "ro": "Despre", "en": "About" },

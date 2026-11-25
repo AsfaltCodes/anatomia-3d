@@ -247,6 +247,12 @@ export async function createScene(canvas, structures) {
       go(viewFor(boxOf(focusIds.map(id => meshes.get(id))), undefined, 1.3), ms);
     },
 
+    setTheme(dark) {
+      scene.background.setHex(dark ? 0x141216 : BACKGROUND);
+      outline.visibleEdgeColor.set(dark ? 0xf3eff4 : INK);
+      outline.hiddenEdgeColor.set(dark ? 0xf3eff4 : INK);
+    },
+
     pause() {
       running = false;
       cancelAnimationFrame(raf);

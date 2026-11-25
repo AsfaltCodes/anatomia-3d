@@ -132,6 +132,10 @@ export async function createThumbnails(structures, quizzes) {
   }
 
   return {
+    setTheme(dark) {
+      dither.uniforms.ink.value.copy(rgb(dark ? 0xf0508c : 0xe6397a));
+      dither.uniforms.paper.value.copy(rgb(dark ? 0x141216 : 0xffffff));
+    },
     draw(canvas, quizId) {
       render(canvas, quizId, START_ANGLE);
     },

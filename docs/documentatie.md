@@ -49,9 +49,9 @@ Fișierul gol `.nojekyll` îi spune lui GitHub să servească toate fișierele e
 ## 3. Cum se joacă
 
 ### Pagina principală
-Sus se află titlul, cu logoul (un os desenat din pixeli roz), o căutare mare și trei butoane, **Oase**, **Mușchi** și **Sistemul nervos**, care te duc direct la secțiunea respectivă. Mai jos sunt toate quizurile, sub formă de carduri, grupate pe sisteme. Fiecare sistem are un card pentru tot sistemul și câte un card pentru fiecare regiune a corpului (de exemplu „Oasele capului” sau „Mușchii membrului inferior”). Imaginea de pe card este regiunea respectivă, desenată în stil **dither** (din puncte roz pe alb); când treci cu mouse-ul peste card, ea se rotește.
+Sus se află titlul mare **„Anatomia”**, cu un efect de **radiografie**: o lupă rotundă se mișcă peste litere (după mouse sau deget, iar dacă nu atingi nimic, plutește singură) și arată, în interiorul ei, literele desenate din puncte roz, ca pe un film de raze X. Sub titlu sunt o căutare mare și trei butoane, **Oase**, **Mușchi** și **Sistemul nervos**, care te duc direct la secțiunea respectivă. Mai jos sunt toate quizurile, sub formă de carduri, grupate pe sisteme. Fiecare sistem are un card pentru tot sistemul și câte un card pentru fiecare regiune a corpului (de exemplu „Oasele capului” sau „Mușchii membrului inferior”). Imaginea de pe card este regiunea respectivă, desenată în stil **dither** (din puncte roz pe alb); când treci cu mouse-ul peste card, ea se rotește.
 
-Pe card scrie câte structuri are quizul, iar o bară arată **cel mai bun scor** al tău (ca în Seterra). Contează doar jocurile în modul **Găsește** care au trecut prin toate structurile quizului, așa că 100% înseamnă că ai găsit din prima tot ce era de găsit. La 100%, bara devine roz-aurie și pe card apare o **stea** desenată tot din pixeli (dither roz–auriu).
+Pe card scrie câte structuri are quizul, iar o bară arată **cel mai bun scor** al tău (ca în Seterra). Contează doar jocurile în modul **Găsește** care au trecut prin toate structurile quizului, așa că 100% înseamnă că ai găsit din prima tot ce era de găsit. La 100%, bara devine aurie și pe card apare o **stea** care se rotește. Steaua e desenată din pixeli: părțile luminate sunt aurii, cele din umbră roz, iar amestecul dintre ele (dither) arată cum se schimbă lumina pe măsură ce se rotește.
 
 Pe telefon nu există „hover”, așa că se rotește singur cardul aflat în mijlocul ecranului; când derulezi, rotirea trece la următorul card.
 
@@ -113,6 +113,9 @@ Când scrii numele, jocul este „îngăduitor”:
 - poți omite cuvinte generale ca „Mușchiul” sau „Osul” (`biceps brahial` e acceptat);
 - la nume cu paranteză, de exemplu „Scapula (omoplatul)”, merge oricare dintre variante.
 
+### Mod luminos și mod întunecat
+Butonul cu soare/lună din bara de sus schimbă tema. La prima vizită, site-ul folosește tema dispozitivului (`prefers-color-scheme`); după ce apeși butonul, alegerea ta se ține minte. Modelul 3D, imaginile de pe carduri și lupa de pe titlu își schimbă și ele culorile.
+
 ### Despre și Confidențialitate
 În subsolul paginii sunt linkuri spre **Despre** (ce este site-ul, de unde vin datele, licențe) și **Confidențialitate**. Site-ul **nu folosește cookie-uri** și nu trimite date nicăieri, deci nu are nevoie de un banner de consimțământ. Recordurile se păstrează doar în browser (`localStorage`). Pe pagina de confidențialitate există un buton **Șterge progresul**.
 
@@ -127,7 +130,9 @@ js/
   scene.js            scena 3D (încărcare modele, rotire, click, evidențiere)
   dither.js           imaginile dither de pe carduri
   results.js          fereastra cu rezultatul
-  logo.js             logoul (osul din pixeli) și steaua de 100%
+  logo.js             logoul (vertebra din pixeli) și steaua de 100%
+  xray.js             efectul de radiografie de pe titlu
+  theme.js            modul luminos / întunecat
   i18n.js             traducerea RO/EN și verificarea răspunsurilor scrise
   storage.js          salvarea în browser (localStorage)
 data/
@@ -192,8 +197,17 @@ Desenează imaginile de pe carduri (explicat la secțiunea 5). Folosește **un s
 Afișează, într-o fereastră peste model (`<dialog>`), scorul cu o animație de numărare, timpul, eticheta „Record nou” și, la 100%, o mică „explozie” de pătrățele roz. Tot aici se salvează recordul.
 
 ### `js/logo.js`
-- `logoSVG(înălțime)` desenează osul din logo: pentru fiecare pătrățel dintr-o grilă de 16×16 verifică dacă e în interiorul formei (un segment pentru corpul osului și patru cercuri pentru capete), apoi îl colorează roz sau roz deschis cu aceeași matrice Bayer ca la carduri;
-- `drawStar(canvas)` desenează steaua de 100%: o stea cu 5 colțuri pe o grilă de 14×14, cu trecere de la roz la auriu făcută prin dither.
+- `logoSVG(înălțime)` desenează logoul: o **vertebră văzută de sus** (corpul vertebrei, gaura prin care trece măduva, cele două aripi și spina), pe o grilă de 16×16 pixeli;
+- `drawStar(canvas, unghi)` desenează steaua de 100% rotită cu un anumit unghi: o micșorează pe orizontală cu `cos(unghi)`, ca să pară că se întoarce în 3D, și colorează fiecare pătrățel auriu sau roz după cât de luminat este (prin matricea Bayer);
+- `startStars()` pornește o singură animație care rotește toate stelele de pe pagină.
+
+### `js/xray.js`
+Efectul de radiografie de pe titlu. Peste titlu există o copie a cuvântului, umplută cu un model de puncte roz și tăiată în formă de cerc (`clip-path: circle(...)`). Poziția cercului vine din variabilele CSS `--x` și `--y`, pe care JavaScript le schimbă când miști mouse-ul sau degetul. Când nimeni nu atinge titlul, cercul se plimbă singur pe o curbă Lissajous (o combinație de două mișcări sinusoidale).
+
+### `js/theme.js`
+- `isDark()` spune dacă tema curentă e întunecată (alegerea salvată sau, dacă nu există, tema dispozitivului);
+- `toggleTheme()` schimbă tema și o salvează;
+- la orice schimbare se trimite evenimentul `themechange`, la care ascultă scena 3D și imaginile cardurilor.
 
 ### `js/i18n.js`
 - `t(cheie)` întoarce textul în limba curentă din `strings.json`;

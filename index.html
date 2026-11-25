@@ -12,6 +12,12 @@
   <meta property="og:image" content="assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>
+    try {
+      const theme = JSON.parse(localStorage.getItem('theme'));
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
   <link rel="stylesheet" href="css/style.css">
   <script type="importmap">
     { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
@@ -30,6 +36,7 @@
     <div class="lang" role="group" aria-label="Limba / Language">
       <button data-lang="ro">RO</button><button data-lang="en">EN</button>
     </div>
+    <button class="theme-toggle" data-theme-toggle></button>
     <button class="burger" aria-expanded="false" aria-controls="drawer" aria-label="Meniu"><span></span><span></span><span></span></button>
   </header>
   <div class="drawer" id="drawer" hidden></div>

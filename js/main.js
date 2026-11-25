@@ -4,7 +4,9 @@ import { createQuiz, availableDetails, isComplete } from './quiz.js';
 import { createScene, SYSTEMS, hasWebGL } from './scene.js';
 import { createThumbnails } from './dither.js';
 import { showResults, formatTime } from './results.js';
-import { logoSVG, drawStar } from './logo.js';
+import { logoSVG, startStars } from './logo.js';
+import { createXray } from './xray.js';
+import { isDark, toggleTheme, forgetTheme } from './theme.js';
 
 const app = document.getElementById('app');
 const nav = document.querySelector('.systems');
@@ -58,6 +60,8 @@ function footer() {
 }
 
 const ICONS = {
+  sun: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 6a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-.75-5h1.5v3h-1.5V1Zm0 15h1.5v3h-1.5v-3ZM1 9.25h3v1.5H1v-1.5Zm15 0h3v1.5h-3v-1.5ZM3.1 4.16l1.06-1.06 2.12 2.12-1.06 1.06L3.1 4.16Zm10.6 10.6 1.06-1.06 2.12 2.12-1.06 1.06-2.12-2.12Zm-10.6 1.08 2.12-2.12 1.06 1.06-2.12 2.12-1.06-1.06Zm10.6-10.6 2.12-2.12 1.06 1.06-2.12 2.12-1.06-1.06Z"/></svg>',
+  moon: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.2 2.2A8 8 0 1 0 17.8 11.8 6.5 6.5 0 0 1 8.2 2.2Z"/></svg>',
   layers: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 2 7l8 4 8-4-8-4Zm-6.5 7L2 10.8l8 4 8-4-1.5-.8L10 13 3.5 10Zm0 3L2 13.8l8 4 8-4-1.5-.8L10 16l-6.5-3Z"/></svg>',
   reset: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4a6 6 0 1 1-5.66 4H2.3A8 8 0 1 0 4 4.7V2H2v6h6V6H5.4A6 6 0 0 1 10 4Z"/></svg>',
   skip: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4v12l9-6-9-6Zm10 0v12h2V4h-2Z"/></svg>',
@@ -173,6 +177,7 @@ function infoPage(kind) {
         try {
           Object.keys(localStorage).filter(k => k.startsWith('best:')).forEach(k => localStorage.removeItem(k));
         } catch {}
+        forgetTheme();
         toast(t('privacy.done'));
       });
     },
@@ -195,6 +200,7 @@ let homeScroll = 0;
 
 function homePage() {
   let thumbs = null;
+  let xray = null;
   let spinning = null;
   let scrollFrame = 0;
 
@@ -203,15 +209,24 @@ function homePage() {
     app.innerHTML = `
       <div class="home">
         <header class="hero">
-          <div class="hero-mark">${logoSVG(96)}</div>
-          <h1>Anatomia 3D</h1>
-          <p class="hero-lead">${t('home.lead')}</p>
-          <div class="search hero-search">
-            <input type="search" autocomplete="off" spellcheck="false">
-            <div class="search-results" role="listbox" hidden></div>
+          <div class="xray">
+            <h1 class="title">Anatomia<span class="tag3d">3D</span></h1>
+            <div class="lens" aria-hidden="true"><span class="title">Anatomia<span class="tag3d">3D</span></span></div>
+            <span class="lens-ring" aria-hidden="true"></span>
           </div>
-          <div class="chips">${QUIZ_SYSTEMS.map(s => `<button class="chip" data-jump="${s}">${t(`system.${s}`)}</button>`).join('')}</div>
-          ${complete ? `<p class="hero-progress">${complete} ${t('home.of')} ${quizzes.length} ${t('home.complete')}</p>` : ''}
+          <div class="hero-row">
+            <div class="hero-actions">
+              <div class="search hero-search">
+                <input type="search" autocomplete="off" spellcheck="false">
+                <div class="search-results" role="listbox" hidden></div>
+              </div>
+              <div class="chips">${QUIZ_SYSTEMS.map(s => `<button class="chip" data-jump="${s}">${t(`system.${s}`)}</button>`).join('')}</div>
+            </div>
+            <div class="hero-side">
+              <p class="hero-lead">${t('home.lead')}</p>
+              ${complete ? `<p class="hero-progress">${complete} ${t('home.of')} ${quizzes.length} ${t('home.complete')}</p>` : ''}
+            </div>
+          </div>
         </header>
         ${QUIZ_SYSTEMS.map(system => `
           <section class="group" id="group-${system}">
@@ -224,7 +239,9 @@ function homePage() {
     app.querySelectorAll('[data-jump]').forEach(b => {
       b.onclick = () => document.getElementById(`group-${b.dataset.jump}`).scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth' });
     });
-    app.querySelectorAll('.star').forEach(c => drawStar(c));
+    xray?.dispose();
+    xray = createXray(app.querySelector('.xray'));
+    startStars();
     drawThumbnails();
   }
 
@@ -295,15 +312,21 @@ function homePage() {
       thumbsPromise ??= createThumbnails(structures, quizzes).catch(() => null);
       thumbsPromise.then(result => {
         thumbs = result;
+        thumbs?.setTheme(isDark());
         if (page === self) drawThumbnails();
       });
     },
     leave() {
+      xray?.dispose();
       homeScroll = scrollY;
       removeEventListener('scroll', onScroll);
       thumbs?.stop();
     },
     relabel: render,
+    onTheme() {
+      thumbs?.setTheme(isDark());
+      drawThumbnails();
+    },
   };
   homeInstance = self;
   return self;
@@ -582,12 +605,14 @@ function playPage(quizDef) {
       if (page !== self) return;
       el.stage.querySelector('.loading').remove();
       el.stage.prepend(sceneCanvas);
+      scene.setTheme(isDark());
       SYSTEMS.forEach(s => scene.setLayer(s, s === system || s === 'skin'));
       scene.setFocus(system, pool.map(s => s.id));
       scene.resume();
       wire();
       start();
     },
+    onTheme() { scene?.setTheme(isDark()); },
     leave() {
       timers.forEach(clearTimeout);
       clearInterval(clock);
@@ -633,6 +658,16 @@ async function boot() {
   const skip = document.querySelector('[data-skip-link]');
   skip.onclick = e => { e.preventDefault(); app.focus(); };
   renderNav();
+  const themeButton = document.querySelector('[data-theme-toggle]');
+  const labelTheme = () => {
+    const label = t(isDark() ? 'theme.toLight' : 'theme.toDark');
+    themeButton.innerHTML = isDark() ? ICONS.sun : ICONS.moon;
+    themeButton.setAttribute('aria-label', label);
+    themeButton.title = label;
+  };
+  themeButton.onclick = toggleTheme;
+  document.addEventListener('themechange', () => { labelTheme(); page?.onTheme?.(); });
+  labelTheme();
   burger.onclick = () => {
     const open = drawer.hidden;
     closeMenus();
@@ -649,6 +684,7 @@ async function boot() {
   document.addEventListener('langchange', () => {
     renderNav();
     skip.textContent = t('nav.skip');
+    labelTheme();
     page?.relabel?.();
     setTitle();
   });
