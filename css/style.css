@@ -128,7 +128,7 @@ svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 /* ---------- Home ---------- */
 .home { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter) 56px; }
 .hero { padding: clamp(28px, 7vh, 80px) 0 clamp(32px, 6vh, 64px); overflow-x: clip; }
-.xray { position: relative; width: max-content; max-width: 100%; margin-left: -.04em; touch-action: pan-y; --x: -999px; --y: -999px; --r: clamp(46px, 9vw, 120px); }
+.xray { position: relative; width: max-content; max-width: 100%; margin-left: -.04em; --x: -999px; --y: -999px; --r: clamp(46px, 9vw, 120px); }
 .title { display: block; font-size: clamp(56px, 19.5vw, 232px); font-weight: 800; letter-spacing: -.06em; line-height: .84; white-space: nowrap; padding-bottom: .06em; }
 .tag3d { display: inline-block; vertical-align: top; writing-mode: vertical-rl; font-size: .13em; font-weight: 700; letter-spacing: .12em; color: var(--pink-deep); margin: .25em 0 0 .12em; }
 .lens { position: absolute; inset: calc(var(--r) * -1); padding: var(--r); pointer-events: none; clip-path: circle(var(--r) at calc(var(--x) + var(--r)) calc(var(--y) + var(--r))); background: var(--xray-film) 0 0 / 8px 8px; image-rendering: pixelated; }
@@ -247,6 +247,10 @@ dialog.results canvas:not(.star) { position: absolute; inset: 0; width: 100%; he
 .results-actions { display: grid; gap: 8px; margin-top: 22px; }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero-row { grid-template-columns: 1fr; gap: 20px; }
+  .hero-side { order: -1; justify-self: start; text-align: left; max-width: 44ch; }
+}
 @media (max-width: 860px) {
   .topbar > .systems, .topbar > .search, .topbar > .lang { display: none; }
   .burger { display: flex; }
