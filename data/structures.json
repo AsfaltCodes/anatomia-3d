@@ -1,0 +1,1943 @@
+[
+ {
+  "id": "frontal-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "frontal bone"
+  ],
+  "name": {
+   "ro": "Osul frontal",
+   "en": "Frontal bone"
+  },
+  "desc": {
+   "ro": "Formează fruntea și partea din față a craniului.",
+   "en": "Forms the forehead and the front of the skull."
+  }
+ },
+ {
+  "id": "parietal-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "parietal bone"
+  ],
+  "name": {
+   "ro": "Osul parietal",
+   "en": "Parietal bone"
+  },
+  "desc": {
+   "ro": "Două oase care formează bolta și pereții laterali ai craniului.",
+   "en": "Two bones forming the roof and sides of the skull."
+  }
+ },
+ {
+  "id": "temporal-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "temporal bone"
+  ],
+  "name": {
+   "ro": "Osul temporal",
+   "en": "Temporal bone"
+  },
+  "desc": {
+   "ro": "Oase pereche pe părțile laterale ale craniului; adăpostesc urechea.",
+   "en": "Paired bones on the sides of the skull that house the ear."
+  }
+ },
+ {
+  "id": "occipital-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "occipital bone"
+  ],
+  "name": {
+   "ro": "Osul occipital",
+   "en": "Occipital bone"
+  },
+  "desc": {
+   "ro": "Formează spatele și baza craniului; prin orificiul lui trece măduva spinării.",
+   "en": "Forms the back and base of the skull; the spinal cord passes through its opening."
+  }
+ },
+ {
+  "id": "mandible",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "mandible"
+  ],
+  "name": {
+   "ro": "Mandibula",
+   "en": "Mandible"
+  },
+  "desc": {
+   "ro": "Maxilarul inferior, singurul os mobil al craniului.",
+   "en": "The lower jaw, the only movable bone of the skull."
+  }
+ },
+ {
+  "id": "maxilla",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "maxilla"
+  ],
+  "name": {
+   "ro": "Maxilarul",
+   "en": "Maxilla"
+  },
+  "desc": {
+   "ro": "Maxilarul superior; susține dinții de sus.",
+   "en": "The upper jaw; holds the upper teeth."
+  }
+ },
+ {
+  "id": "zygomatic-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "zygomatic bone"
+  ],
+  "name": {
+   "ro": "Osul zigomatic",
+   "en": "Zygomatic bone"
+  },
+  "desc": {
+   "ro": "Pometele obrazului; formează o parte din marginea orbitei.",
+   "en": "The cheekbone; forms part of the eye socket rim."
+  }
+ },
+ {
+  "id": "clavicle",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "clavicle"
+  ],
+  "name": {
+   "ro": "Clavicula",
+   "en": "Clavicle"
+  },
+  "desc": {
+   "ro": "Os lung în formă de S care leagă sternul de omoplat.",
+   "en": "S-shaped long bone linking the sternum to the shoulder blade."
+  }
+ },
+ {
+  "id": "scapula",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "scapula"
+  ],
+  "name": {
+   "ro": "Scapula (omoplatul)",
+   "en": "Scapula"
+  },
+  "desc": {
+   "ro": "Os lat și triunghiular pe spate; se articulează cu humerusul.",
+   "en": "Flat triangular bone on the back that joins the humerus."
+  }
+ },
+ {
+  "id": "sternum",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "sternum"
+  ],
+  "name": {
+   "ro": "Sternul",
+   "en": "Sternum"
+  },
+  "desc": {
+   "ro": "Os lat în mijlocul pieptului, de care se prind coastele.",
+   "en": "Flat bone in the middle of the chest where the ribs attach."
+  }
+ },
+ {
+  "id": "ribs",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "rib"
+  ],
+  "name": {
+   "ro": "Coastele",
+   "en": "Ribs"
+  },
+  "desc": {
+   "ro": "12 perechi de oase curbate care protejează inima și plămânii.",
+   "en": "12 pairs of curved bones that protect the heart and lungs."
+  }
+ },
+ {
+  "id": "humerus",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "humerus"
+  ],
+  "name": {
+   "ro": "Humerusul",
+   "en": "Humerus"
+  },
+  "desc": {
+   "ro": "Osul brațului, între umăr și cot.",
+   "en": "The bone of the upper arm, between shoulder and elbow."
+  }
+ },
+ {
+  "id": "radius",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "radius"
+  ],
+  "name": {
+   "ro": "Radiusul",
+   "en": "Radius"
+  },
+  "desc": {
+   "ro": "Osul antebrațului de pe partea degetului mare.",
+   "en": "Forearm bone on the thumb side."
+  }
+ },
+ {
+  "id": "ulna",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "ulna"
+  ],
+  "name": {
+   "ro": "Ulna (cubitusul)",
+   "en": "Ulna"
+  },
+  "desc": {
+   "ro": "Osul antebrațului de pe partea degetului mic; formează vârful cotului.",
+   "en": "Forearm bone on the little-finger side; forms the tip of the elbow."
+  }
+ },
+ {
+  "id": "carpals",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "carpal bone"
+  ],
+  "name": {
+   "ro": "Oasele carpiene",
+   "en": "Carpal bones"
+  },
+  "desc": {
+   "ro": "Opt oase mici care formează încheietura mâinii.",
+   "en": "Eight small bones that form the wrist."
+  }
+ },
+ {
+  "id": "metacarpals",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "metacarpal bone"
+  ],
+  "name": {
+   "ro": "Oasele metacarpiene",
+   "en": "Metacarpal bones"
+  },
+  "desc": {
+   "ro": "Cinci oase lungi care formează palma.",
+   "en": "Five long bones that form the palm."
+  }
+ },
+ {
+  "id": "finger-phalanges",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "phalanx of finger"
+  ],
+  "name": {
+   "ro": "Falangele degetelor mâinii",
+   "en": "Finger phalanges"
+  },
+  "desc": {
+   "ro": "Oasele degetelor: câte trei la fiecare deget, două la degetul mare.",
+   "en": "The finger bones: three in each finger, two in the thumb."
+  }
+ },
+ {
+  "id": "cervical-vertebrae",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "cervical vertebra"
+  ],
+  "name": {
+   "ro": "Vertebrele cervicale",
+   "en": "Cervical vertebrae"
+  },
+  "desc": {
+   "ro": "Cele 7 vertebre ale gâtului; atlasul și axisul permit mișcarea capului.",
+   "en": "The 7 neck vertebrae; the atlas and axis let the head move."
+  }
+ },
+ {
+  "id": "thoracic-vertebrae",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "thoracic vertebra"
+  ],
+  "name": {
+   "ro": "Vertebrele toracice",
+   "en": "Thoracic vertebrae"
+  },
+  "desc": {
+   "ro": "Cele 12 vertebre ale spatelui, de care se prind coastele.",
+   "en": "The 12 vertebrae of the back where the ribs attach."
+  }
+ },
+ {
+  "id": "lumbar-vertebrae",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "lumbar vertebra"
+  ],
+  "name": {
+   "ro": "Vertebrele lombare",
+   "en": "Lumbar vertebrae"
+  },
+  "desc": {
+   "ro": "Cele 5 vertebre mari din zona de jos a spatelui; poartă cea mai mare greutate.",
+   "en": "The 5 large lower-back vertebrae; they carry the most weight."
+  }
+ },
+ {
+  "id": "sacrum",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "sacrum"
+  ],
+  "name": {
+   "ro": "Sacrul",
+   "en": "Sacrum"
+  },
+  "desc": {
+   "ro": "Os triunghiular format din 5 vertebre sudate; leagă coloana de bazin.",
+   "en": "Triangular bone of 5 fused vertebrae linking the spine to the pelvis."
+  }
+ },
+ {
+  "id": "hip-bone",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "hip bone"
+  ],
+  "name": {
+   "ro": "Osul coxal",
+   "en": "Hip bone"
+  },
+  "desc": {
+   "ro": "Os pereche care formează bazinul; în el intră capul femurului.",
+   "en": "Paired bone forming the pelvis; the head of the femur fits into it."
+  }
+ },
+ {
+  "id": "femur",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "femur"
+  ],
+  "name": {
+   "ro": "Femurul",
+   "en": "Femur"
+  },
+  "desc": {
+   "ro": "Osul coapsei, cel mai lung și mai puternic os din corp.",
+   "en": "The thigh bone, the longest and strongest bone in the body."
+  }
+ },
+ {
+  "id": "patella",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "patella"
+  ],
+  "name": {
+   "ro": "Rotula (patela)",
+   "en": "Patella"
+  },
+  "desc": {
+   "ro": "Os mic și plat în fața genunchiului.",
+   "en": "Small flat bone at the front of the knee."
+  }
+ },
+ {
+  "id": "tibia",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "tibia"
+  ],
+  "name": {
+   "ro": "Tibia",
+   "en": "Tibia"
+  },
+  "desc": {
+   "ro": "Osul principal al gambei, pe partea interioară; poartă greutatea corpului.",
+   "en": "Main bone of the lower leg, on the inner side; bears body weight."
+  }
+ },
+ {
+  "id": "fibula",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "fibula"
+  ],
+  "name": {
+   "ro": "Fibula (peroneul)",
+   "en": "Fibula"
+  },
+  "desc": {
+   "ro": "Osul subțire de pe partea exterioară a gambei.",
+   "en": "The thin bone on the outer side of the lower leg."
+  }
+ },
+ {
+  "id": "tarsals",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "tarsal bone"
+  ],
+  "name": {
+   "ro": "Oasele tarsiene",
+   "en": "Tarsal bones"
+  },
+  "desc": {
+   "ro": "Șapte oase ale gleznei și călcâiului, printre care calcaneul și talusul.",
+   "en": "Seven ankle and heel bones, including the calcaneus and talus."
+  }
+ },
+ {
+  "id": "metatarsals",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "metatarsal bone"
+  ],
+  "name": {
+   "ro": "Oasele metatarsiene",
+   "en": "Metatarsal bones"
+  },
+  "desc": {
+   "ro": "Cinci oase lungi ale tălpii.",
+   "en": "Five long bones of the foot."
+  }
+ },
+ {
+  "id": "toe-phalanges",
+  "system": "bones",
+  "tier": 1,
+  "src": [
+   "phalanx of toe"
+  ],
+  "name": {
+   "ro": "Falangele degetelor piciorului",
+   "en": "Toe phalanges"
+  },
+  "desc": {
+   "ro": "Oasele degetelor de la picior.",
+   "en": "The bones of the toes."
+  }
+ },
+ {
+  "id": "sphenoid-bone",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "sphenoid bone"
+  ],
+  "name": {
+   "ro": "Osul sfenoid",
+   "en": "Sphenoid bone"
+  },
+  "desc": {
+   "ro": "Os în formă de fluture la baza craniului, în spatele ochilor.",
+   "en": "Butterfly-shaped bone at the base of the skull, behind the eyes."
+  }
+ },
+ {
+  "id": "nasal-bone",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "nasal bone"
+  ],
+  "name": {
+   "ro": "Oasele nazale",
+   "en": "Nasal bones"
+  },
+  "desc": {
+   "ro": "Două oase mici care formează rădăcina nasului.",
+   "en": "Two small bones forming the bridge of the nose."
+  }
+ },
+ {
+  "id": "hyoid-bone",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "hyoid bone"
+  ],
+  "name": {
+   "ro": "Osul hioid",
+   "en": "Hyoid bone"
+  },
+  "desc": {
+   "ro": "Os în formă de U din gât, care nu se articulează cu alt os; susține limba.",
+   "en": "U-shaped neck bone that touches no other bone; supports the tongue."
+  }
+ },
+ {
+  "id": "vomer",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "vomer"
+  ],
+  "name": {
+   "ro": "Vomerul",
+   "en": "Vomer"
+  },
+  "desc": {
+   "ro": "Os subțire care formează partea de jos a septului nazal.",
+   "en": "Thin bone forming the lower part of the nasal septum."
+  }
+ },
+ {
+  "id": "lacrimal-bone",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "lacrimal bone"
+  ],
+  "name": {
+   "ro": "Osul lacrimal",
+   "en": "Lacrimal bone"
+  },
+  "desc": {
+   "ro": "Cel mai mic os al feței, în peretele interior al orbitei.",
+   "en": "The smallest bone of the face, in the inner wall of the eye socket."
+  }
+ },
+ {
+  "id": "palatine-bone",
+  "system": "bones",
+  "tier": 2,
+  "src": [
+   "palatine bone"
+  ],
+  "name": {
+   "ro": "Osul palatin",
+   "en": "Palatine bone"
+  },
+  "desc": {
+   "ro": "Formează partea din spate a cerului gurii.",
+   "en": "Forms the back of the roof of the mouth."
+  }
+ },
+ {
+  "id": "deltoid",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "acromial part of deltoid",
+   "clavicular part of deltoid",
+   "spinal part of deltoid"
+  ],
+  "name": {
+   "ro": "Mușchiul deltoid",
+   "en": "Deltoid"
+  },
+  "desc": {
+   "ro": "Mușchiul rotunjit al umărului; ridică brațul lateral.",
+   "en": "The rounded shoulder muscle; lifts the arm sideways."
+  }
+ },
+ {
+  "id": "trapezius",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "ascending part of trapezius",
+   "descending part of trapezius",
+   "transverse part of trapezius"
+  ],
+  "name": {
+   "ro": "Mușchiul trapez",
+   "en": "Trapezius"
+  },
+  "desc": {
+   "ro": "Mușchi mare pe ceafă și spate; mișcă omoplații și capul.",
+   "en": "Large muscle of the neck and upper back; moves the shoulder blades and head."
+  }
+ },
+ {
+  "id": "biceps-brachii",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "long head of biceps brachii",
+   "short head of biceps brachii"
+  ],
+  "name": {
+   "ro": "Mușchiul biceps brahial",
+   "en": "Biceps brachii"
+  },
+  "desc": {
+   "ro": "În fața brațului; îndoaie cotul și rotește antebrațul.",
+   "en": "At the front of the arm; bends the elbow and turns the forearm."
+  }
+ },
+ {
+  "id": "triceps-brachii",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "lateral head of triceps brachii",
+   "long head of triceps brachii",
+   "medial head of triceps brachii"
+  ],
+  "name": {
+   "ro": "Mușchiul triceps brahial",
+   "en": "Triceps brachii"
+  },
+  "desc": {
+   "ro": "În spatele brațului; întinde cotul.",
+   "en": "At the back of the arm; straightens the elbow."
+  }
+ },
+ {
+  "id": "brachialis",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "brachialis"
+  ],
+  "name": {
+   "ro": "Mușchiul brahial",
+   "en": "Brachialis"
+  },
+  "desc": {
+   "ro": "Sub biceps; principalul flexor al cotului.",
+   "en": "Beneath the biceps; the main elbow flexor."
+  }
+ },
+ {
+  "id": "brachioradialis",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "brachioradialis"
+  ],
+  "name": {
+   "ro": "Mușchiul brahioradial",
+   "en": "Brachioradialis"
+  },
+  "desc": {
+   "ro": "Pe antebraț, spre degetul mare; ajută la îndoirea cotului.",
+   "en": "On the thumb side of the forearm; helps bend the elbow."
+  }
+ },
+ {
+  "id": "pectoralis-major",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "abdominal part of pectoralis major",
+   "clavicular part of pectoralis major",
+   "sternocostal part of pectoralis major"
+  ],
+  "name": {
+   "ro": "Mușchiul pectoral mare",
+   "en": "Pectoralis major"
+  },
+  "desc": {
+   "ro": "Mușchiul mare al pieptului; apropie și rotește brațul spre interior.",
+   "en": "The large chest muscle; pulls the arm in and rotates it inward."
+  }
+ },
+ {
+  "id": "serratus-anterior",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "serratus anterior"
+  ],
+  "name": {
+   "ro": "Mușchiul dințat anterior",
+   "en": "Serratus anterior"
+  },
+  "desc": {
+   "ro": "Pe partea laterală a toracelui, în formă de dinți de fierăstrău; trage omoplatul înainte.",
+   "en": "On the side of the chest, saw-toothed; pulls the shoulder blade forward."
+  }
+ },
+ {
+  "id": "external-oblique",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "external oblique"
+  ],
+  "name": {
+   "ro": "Mușchiul oblic extern",
+   "en": "External oblique"
+  },
+  "desc": {
+   "ro": "Cel mai superficial mușchi lateral al abdomenului; răsucește trunchiul.",
+   "en": "The outermost side muscle of the abdomen; twists the trunk."
+  }
+ },
+ {
+  "id": "diaphragm",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "diaphragm"
+  ],
+  "name": {
+   "ro": "Diafragma",
+   "en": "Diaphragm"
+  },
+  "desc": {
+   "ro": "Mușchi în formă de cupolă între torace și abdomen; principalul mușchi al respirației.",
+   "en": "Dome-shaped muscle between chest and abdomen; the main breathing muscle."
+  }
+ },
+ {
+  "id": "gluteus-maximus",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "gluteus maximus"
+  ],
+  "name": {
+   "ro": "Mușchiul fesier mare",
+   "en": "Gluteus maximus"
+  },
+  "desc": {
+   "ro": "Cel mai mare mușchi din corp; întinde șoldul, de exemplu la urcatul scărilor.",
+   "en": "The largest muscle in the body; extends the hip, e.g. climbing stairs."
+  }
+ },
+ {
+  "id": "gluteus-medius",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "gluteus medius"
+  ],
+  "name": {
+   "ro": "Mușchiul fesier mijlociu",
+   "en": "Gluteus medius"
+  },
+  "desc": {
+   "ro": "Pe partea laterală a șoldului; ține bazinul drept la mers.",
+   "en": "On the side of the hip; keeps the pelvis level when walking."
+  }
+ },
+ {
+  "id": "sartorius",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "sartorius"
+  ],
+  "name": {
+   "ro": "Mușchiul croitor",
+   "en": "Sartorius"
+  },
+  "desc": {
+   "ro": "Cel mai lung mușchi din corp; traversează coapsa în diagonală.",
+   "en": "The longest muscle in the body; crosses the thigh diagonally."
+  }
+ },
+ {
+  "id": "rectus-femoris",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "rectus femoris"
+  ],
+  "name": {
+   "ro": "Mușchiul drept femural",
+   "en": "Rectus femoris"
+  },
+  "desc": {
+   "ro": "Parte a cvadricepsului, în fața coapsei; întinde genunchiul.",
+   "en": "Part of the quadriceps at the front of the thigh; straightens the knee."
+  }
+ },
+ {
+  "id": "vastus-lateralis",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "vastus lateralis"
+  ],
+  "name": {
+   "ro": "Mușchiul vast lateral",
+   "en": "Vastus lateralis"
+  },
+  "desc": {
+   "ro": "Cea mai mare parte a cvadricepsului, pe exteriorul coapsei.",
+   "en": "The largest part of the quadriceps, on the outer thigh."
+  }
+ },
+ {
+  "id": "vastus-medialis",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "vastus medialis"
+  ],
+  "name": {
+   "ro": "Mușchiul vast medial",
+   "en": "Vastus medialis"
+  },
+  "desc": {
+   "ro": "Partea cvadricepsului de pe interiorul coapsei, deasupra genunchiului.",
+   "en": "The part of the quadriceps on the inner thigh, above the knee."
+  }
+ },
+ {
+  "id": "biceps-femoris",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "long head of biceps femoris",
+   "short head of biceps femoris"
+  ],
+  "name": {
+   "ro": "Mușchiul biceps femural",
+   "en": "Biceps femoris"
+  },
+  "desc": {
+   "ro": "Mușchi ischiogambier pe spatele coapsei, spre exterior; îndoaie genunchiul.",
+   "en": "Hamstring at the back of the thigh, outer side; bends the knee."
+  }
+ },
+ {
+  "id": "semitendinosus",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "semitendinosus"
+  ],
+  "name": {
+   "ro": "Mușchiul semitendinos",
+   "en": "Semitendinosus"
+  },
+  "desc": {
+   "ro": "Mușchi ischiogambier pe spatele coapsei, spre interior.",
+   "en": "Hamstring at the back of the thigh, inner side."
+  }
+ },
+ {
+  "id": "gracilis",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "gracilis"
+  ],
+  "name": {
+   "ro": "Mușchiul gracilis",
+   "en": "Gracilis"
+  },
+  "desc": {
+   "ro": "Mușchi subțire pe interiorul coapsei; apropie coapsa.",
+   "en": "Thin muscle on the inner thigh; pulls the thigh in."
+  }
+ },
+ {
+  "id": "adductor-longus",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "adductor longus"
+  ],
+  "name": {
+   "ro": "Mușchiul adductor lung",
+   "en": "Adductor longus"
+  },
+  "desc": {
+   "ro": "Pe interiorul coapsei; apropie coapsele una de alta.",
+   "en": "On the inner thigh; pulls the thighs together."
+  }
+ },
+ {
+  "id": "tensor-fasciae-latae",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "tensor fasciae latae"
+  ],
+  "name": {
+   "ro": "Mușchiul tensor al fasciei lata",
+   "en": "Tensor fasciae latae"
+  },
+  "desc": {
+   "ro": "Mic, pe partea laterală a șoldului; stabilizează șoldul și genunchiul.",
+   "en": "Small, on the side of the hip; steadies the hip and knee."
+  }
+ },
+ {
+  "id": "gastrocnemius",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "lateral head of gastrocnemius",
+   "medial head of gastrocnemius"
+  ],
+  "name": {
+   "ro": "Mușchiul gastrocnemian",
+   "en": "Gastrocnemius"
+  },
+  "desc": {
+   "ro": "Mușchiul pulpei, cu două capete; ridică călcâiul.",
+   "en": "The two-headed calf muscle; raises the heel."
+  }
+ },
+ {
+  "id": "soleus",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "soleus"
+  ],
+  "name": {
+   "ro": "Mușchiul solear",
+   "en": "Soleus"
+  },
+  "desc": {
+   "ro": "Mușchi lat sub gastrocnemian; ne ține în picioare.",
+   "en": "Broad muscle beneath the gastrocnemius; keeps us upright."
+  }
+ },
+ {
+  "id": "tibialis-anterior",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "tibialis anterior"
+  ],
+  "name": {
+   "ro": "Mușchiul tibial anterior",
+   "en": "Tibialis anterior"
+  },
+  "desc": {
+   "ro": "În fața gambei; ridică vârful piciorului.",
+   "en": "At the front of the shin; lifts the front of the foot."
+  }
+ },
+ {
+  "id": "sternocleidomastoid",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "sternocleidomastoid"
+  ],
+  "name": {
+   "ro": "Mușchiul sternocleidomastoidian",
+   "en": "Sternocleidomastoid"
+  },
+  "desc": {
+   "ro": "Pe partea laterală a gâtului; rotește și înclină capul.",
+   "en": "On the side of the neck; turns and tilts the head."
+  }
+ },
+ {
+  "id": "infraspinatus",
+  "system": "muscles",
+  "tier": 1,
+  "src": [
+   "infraspinatus"
+  ],
+  "name": {
+   "ro": "Mușchiul infraspinos",
+   "en": "Infraspinatus"
+  },
+  "desc": {
+   "ro": "Pe omoplat, sub spina scapulei; rotește brațul spre exterior.",
+   "en": "On the shoulder blade below its spine; rotates the arm outward."
+  }
+ },
+ {
+  "id": "pectoralis-minor",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "pectoralis minor"
+  ],
+  "name": {
+   "ro": "Mușchiul pectoral mic",
+   "en": "Pectoralis minor"
+  },
+  "desc": {
+   "ro": "Sub pectoralul mare; coboară umărul.",
+   "en": "Beneath the pectoralis major; lowers the shoulder."
+  }
+ },
+ {
+  "id": "gluteus-minimus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "gluteus minimus"
+  ],
+  "name": {
+   "ro": "Mușchiul fesier mic",
+   "en": "Gluteus minimus"
+  },
+  "desc": {
+   "ro": "Cel mai profund mușchi fesier; ajută la rotirea șoldului.",
+   "en": "The deepest gluteal muscle; helps rotate the hip."
+  }
+ },
+ {
+  "id": "vastus-intermedius",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "vastus intermedius"
+  ],
+  "name": {
+   "ro": "Mușchiul vast intermediar",
+   "en": "Vastus intermedius"
+  },
+  "desc": {
+   "ro": "Partea cea mai profundă a cvadricepsului, sub dreptul femural.",
+   "en": "The deepest part of the quadriceps, under the rectus femoris."
+  }
+ },
+ {
+  "id": "semimembranosus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "semimembranosus"
+  ],
+  "name": {
+   "ro": "Mușchiul semimembranos",
+   "en": "Semimembranosus"
+  },
+  "desc": {
+   "ro": "Mușchi ischiogambier lat, sub semitendinos.",
+   "en": "Broad hamstring beneath the semitendinosus."
+  }
+ },
+ {
+  "id": "adductor-magnus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "adductor magnus"
+  ],
+  "name": {
+   "ro": "Mușchiul adductor mare",
+   "en": "Adductor magnus"
+  },
+  "desc": {
+   "ro": "Cel mai mare adductor; apropie și întinde coapsa.",
+   "en": "The largest adductor; pulls the thigh in and back."
+  }
+ },
+ {
+  "id": "adductor-brevis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "adductor brevis"
+  ],
+  "name": {
+   "ro": "Mușchiul adductor scurt",
+   "en": "Adductor brevis"
+  },
+  "desc": {
+   "ro": "Adductor scurt, sub adductorul lung.",
+   "en": "Short adductor beneath the adductor longus."
+  }
+ },
+ {
+  "id": "tibialis-posterior",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "tibialis posterior"
+  ],
+  "name": {
+   "ro": "Mușchiul tibial posterior",
+   "en": "Tibialis posterior"
+  },
+  "desc": {
+   "ro": "Mușchi profund al gambei; susține bolta plantară.",
+   "en": "Deep calf muscle; supports the arch of the foot."
+  }
+ },
+ {
+  "id": "fibularis-longus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "fibularis longus"
+  ],
+  "name": {
+   "ro": "Mușchiul peronier lung",
+   "en": "Fibularis longus"
+  },
+  "desc": {
+   "ro": "Pe exteriorul gambei; întoarce talpa spre exterior.",
+   "en": "On the outer lower leg; turns the sole outward."
+  }
+ },
+ {
+  "id": "extensor-digitorum-longus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "extensor digitorum longus"
+  ],
+  "name": {
+   "ro": "Mușchiul extensor lung al degetelor",
+   "en": "Extensor digitorum longus"
+  },
+  "desc": {
+   "ro": "În fața gambei; ridică degetele piciorului.",
+   "en": "At the front of the shin; lifts the toes."
+  }
+ },
+ {
+  "id": "flexor-digitorum-longus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "flexor digitorum longus"
+  ],
+  "name": {
+   "ro": "Mușchiul flexor lung al degetelor",
+   "en": "Flexor digitorum longus"
+  },
+  "desc": {
+   "ro": "Profund în gambă; îndoaie degetele piciorului.",
+   "en": "Deep in the calf; curls the toes."
+  }
+ },
+ {
+  "id": "supraspinatus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "supraspinatus"
+  ],
+  "name": {
+   "ro": "Mușchiul supraspinos",
+   "en": "Supraspinatus"
+  },
+  "desc": {
+   "ro": "Deasupra spinei scapulei; începe ridicarea brațului.",
+   "en": "Above the spine of the shoulder blade; starts lifting the arm."
+  }
+ },
+ {
+  "id": "teres-major",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "teres major"
+  ],
+  "name": {
+   "ro": "Mușchiul rotund mare",
+   "en": "Teres major"
+  },
+  "desc": {
+   "ro": "Între omoplat și humerus; coboară brațul și îl rotește spre interior.",
+   "en": "Between shoulder blade and humerus; lowers the arm and turns it inward."
+  }
+ },
+ {
+  "id": "teres-minor",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "teres minor"
+  ],
+  "name": {
+   "ro": "Mușchiul rotund mic",
+   "en": "Teres minor"
+  },
+  "desc": {
+   "ro": "Sub infraspinos; rotește brațul spre exterior.",
+   "en": "Below the infraspinatus; rotates the arm outward."
+  }
+ },
+ {
+  "id": "subscapularis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "subscapularis"
+  ],
+  "name": {
+   "ro": "Mușchiul subscapular",
+   "en": "Subscapularis"
+  },
+  "desc": {
+   "ro": "Pe fața omoplatului dinspre coaste; rotește brațul spre interior.",
+   "en": "On the rib side of the shoulder blade; rotates the arm inward."
+  }
+ },
+ {
+  "id": "rhomboid-major",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "rhomboid major"
+  ],
+  "name": {
+   "ro": "Mușchiul romboid mare",
+   "en": "Rhomboid major"
+  },
+  "desc": {
+   "ro": "Între coloană și omoplat; apropie omoplații.",
+   "en": "Between spine and shoulder blade; pulls the shoulder blades together."
+  }
+ },
+ {
+  "id": "rhomboid-minor",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "rhomboid minor"
+  ],
+  "name": {
+   "ro": "Mușchiul romboid mic",
+   "en": "Rhomboid minor"
+  },
+  "desc": {
+   "ro": "Deasupra romboidului mare; apropie omoplații.",
+   "en": "Above the rhomboid major; pulls the shoulder blades together."
+  }
+ },
+ {
+  "id": "levator-scapulae",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "levator scapulae"
+  ],
+  "name": {
+   "ro": "Mușchiul ridicător al scapulei",
+   "en": "Levator scapulae"
+  },
+  "desc": {
+   "ro": "Pe ceafă; ridică omoplatul.",
+   "en": "At the back of the neck; lifts the shoulder blade."
+  }
+ },
+ {
+  "id": "iliacus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "iliacus"
+  ],
+  "name": {
+   "ro": "Mușchiul iliac",
+   "en": "Iliacus"
+  },
+  "desc": {
+   "ro": "În interiorul bazinului; îndoaie șoldul împreună cu psoasul.",
+   "en": "Inside the pelvis; bends the hip together with the psoas."
+  }
+ },
+ {
+  "id": "psoas-major",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "psoas major"
+  ],
+  "name": {
+   "ro": "Mușchiul psoas mare",
+   "en": "Psoas major"
+  },
+  "desc": {
+   "ro": "Leagă coloana lombară de femur; principalul flexor al șoldului.",
+   "en": "Links the lower spine to the femur; the main hip flexor."
+  }
+ },
+ {
+  "id": "flexor-carpi-radialis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "flexor carpi radialis"
+  ],
+  "name": {
+   "ro": "Mușchiul flexor radial al carpului",
+   "en": "Flexor carpi radialis"
+  },
+  "desc": {
+   "ro": "În antebraț; îndoaie încheietura mâinii.",
+   "en": "In the forearm; bends the wrist."
+  }
+ },
+ {
+  "id": "extensor-carpi-radialis-longus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "extensor carpi radialis longus"
+  ],
+  "name": {
+   "ro": "Mușchiul extensor radial lung al carpului",
+   "en": "Extensor carpi radialis longus"
+  },
+  "desc": {
+   "ro": "Pe dosul antebrațului; întinde încheietura mâinii.",
+   "en": "On the back of the forearm; extends the wrist."
+  }
+ },
+ {
+  "id": "palmaris-longus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "palmaris longus"
+  ],
+  "name": {
+   "ro": "Mușchiul palmar lung",
+   "en": "Palmaris longus"
+  },
+  "desc": {
+   "ro": "Mușchi subțire al antebrațului; lipsește la unii oameni.",
+   "en": "Thin forearm muscle; missing in some people."
+  }
+ },
+ {
+  "id": "extensor-digitorum",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "extensor digitorum"
+  ],
+  "name": {
+   "ro": "Mușchiul extensor al degetelor",
+   "en": "Extensor digitorum"
+  },
+  "desc": {
+   "ro": "Pe dosul antebrațului; întinde degetele mâinii.",
+   "en": "On the back of the forearm; straightens the fingers."
+  }
+ },
+ {
+  "id": "coracobrachialis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "coracobrachialis"
+  ],
+  "name": {
+   "ro": "Mușchiul coracobrahial",
+   "en": "Coracobrachialis"
+  },
+  "desc": {
+   "ro": "Pe interiorul brațului; apropie brațul de corp.",
+   "en": "On the inner arm; pulls the arm toward the body."
+  }
+ },
+ {
+  "id": "anconeus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "anconeus"
+  ],
+  "name": {
+   "ro": "Mușchiul anconeu",
+   "en": "Anconeus"
+  },
+  "desc": {
+   "ro": "Mic, la spatele cotului; ajută la întinderea cotului.",
+   "en": "Small, at the back of the elbow; helps straighten it."
+  }
+ },
+ {
+  "id": "popliteus",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "popliteus"
+  ],
+  "name": {
+   "ro": "Mușchiul popliteu",
+   "en": "Popliteus"
+  },
+  "desc": {
+   "ro": "Mic, în spatele genunchiului; „deblochează” genunchiul.",
+   "en": "Small, behind the knee; \"unlocks\" the knee."
+  }
+ },
+ {
+  "id": "piriformis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "piriformis"
+  ],
+  "name": {
+   "ro": "Mușchiul piriform",
+   "en": "Piriformis"
+  },
+  "desc": {
+   "ro": "Sub fesierul mare; rotește coapsa spre exterior.",
+   "en": "Beneath the gluteus maximus; rotates the thigh outward."
+  }
+ },
+ {
+  "id": "platysma",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "platysma"
+  ],
+  "name": {
+   "ro": "Mușchiul platisma",
+   "en": "Platysma"
+  },
+  "desc": {
+   "ro": "Mușchi subțire sub pielea gâtului; trage în jos colțurile gurii.",
+   "en": "Thin muscle under the skin of the neck; pulls the mouth corners down."
+  }
+ },
+ {
+  "id": "splenius-capitis",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "splenius capitis"
+  ],
+  "name": {
+   "ro": "Mușchiul splenius al capului",
+   "en": "Splenius capitis"
+  },
+  "desc": {
+   "ro": "Pe ceafă; întinde și rotește capul.",
+   "en": "At the back of the neck; extends and turns the head."
+  }
+ },
+ {
+  "id": "intercostals",
+  "system": "muscles",
+  "tier": 2,
+  "src": [
+   "intercostal muscle"
+  ],
+  "name": {
+   "ro": "Mușchii intercostali",
+   "en": "Intercostal muscles"
+  },
+  "desc": {
+   "ro": "Între coaste; mișcă coastele la respirație.",
+   "en": "Between the ribs; move the ribs when breathing."
+  }
+ },
+ {
+  "id": "frontal-lobe",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "superior frontal gyrus",
+   "middle frontal gyrus",
+   "inferior frontal gyrus",
+   "precentral gyrus",
+   "orbital gyrus"
+  ],
+  "name": {
+   "ro": "Lobul frontal",
+   "en": "Frontal lobe"
+  },
+  "desc": {
+   "ro": "Partea din față a creierului; gândire, planificare și mișcări voluntare.",
+   "en": "The front of the brain; thinking, planning and voluntary movement."
+  }
+ },
+ {
+  "id": "parietal-lobe",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "postcentral gyrus",
+   "superior parietal lobule",
+   "supramarginal gyrus",
+   "angular gyrus"
+  ],
+  "name": {
+   "ro": "Lobul parietal",
+   "en": "Parietal lobe"
+  },
+  "desc": {
+   "ro": "Primește senzațiile de atingere, durere și temperatură.",
+   "en": "Receives the senses of touch, pain and temperature."
+  }
+ },
+ {
+  "id": "temporal-lobe",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "anterior part of superior temporal gyrus",
+   "posterior part of superior temporal gyrus",
+   "middle temporal gyrus",
+   "inferior temporal gyrus"
+  ],
+  "name": {
+   "ro": "Lobul temporal",
+   "en": "Temporal lobe"
+  },
+  "desc": {
+   "ro": "Pe părțile laterale ale creierului; auz, limbaj și memorie.",
+   "en": "On the sides of the brain; hearing, language and memory."
+  }
+ },
+ {
+  "id": "occipital-lobe",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "occipital lobe"
+  ],
+  "name": {
+   "ro": "Lobul occipital",
+   "en": "Occipital lobe"
+  },
+  "desc": {
+   "ro": "În spatele creierului; centrul vederii.",
+   "en": "At the back of the brain; the centre of vision."
+  }
+ },
+ {
+  "id": "cerebellum",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "cerebellum"
+  ],
+  "name": {
+   "ro": "Cerebelul",
+   "en": "Cerebellum"
+  },
+  "desc": {
+   "ro": "„Creierul mic”; echilibru și coordonarea mișcărilor.",
+   "en": "The \"little brain\"; balance and coordination of movement."
+  }
+ },
+ {
+  "id": "pons",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "pons"
+  ],
+  "name": {
+   "ro": "Puntea",
+   "en": "Pons"
+  },
+  "desc": {
+   "ro": "Parte a trunchiului cerebral; leagă creierul de cerebel.",
+   "en": "Part of the brainstem; connects the brain to the cerebellum."
+  }
+ },
+ {
+  "id": "medulla-oblongata",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "medulla oblongata"
+  ],
+  "name": {
+   "ro": "Bulbul rahidian",
+   "en": "Medulla oblongata"
+  },
+  "desc": {
+   "ro": "Partea de jos a trunchiului cerebral; controlează respirația și bătăile inimii.",
+   "en": "The lowest part of the brainstem; controls breathing and heartbeat."
+  }
+ },
+ {
+  "id": "midbrain",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "midbrain"
+  ],
+  "name": {
+   "ro": "Mezencefalul",
+   "en": "Midbrain"
+  },
+  "desc": {
+   "ro": "Partea de sus a trunchiului cerebral; reflexe vizuale și auditive.",
+   "en": "The top of the brainstem; visual and hearing reflexes."
+  }
+ },
+ {
+  "id": "spinal-cord",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "spinal cord"
+  ],
+  "name": {
+   "ro": "Măduva spinării",
+   "en": "Spinal cord"
+  },
+  "desc": {
+   "ro": "Cordon nervos din canalul vertebral; duce mesajele între creier și corp.",
+   "en": "Nerve cord inside the spine; carries messages between brain and body."
+  }
+ },
+ {
+  "id": "corpus-callosum",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "corpus callosum"
+  ],
+  "name": {
+   "ro": "Corpul calos",
+   "en": "Corpus callosum"
+  },
+  "desc": {
+   "ro": "Punte de fibre nervoase care leagă cele două emisfere.",
+   "en": "A bridge of nerve fibres joining the two hemispheres."
+  }
+ },
+ {
+  "id": "thalamus",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "thalamus"
+  ],
+  "name": {
+   "ro": "Talamusul",
+   "en": "Thalamus"
+  },
+  "desc": {
+   "ro": "Releu care trimite informațiile senzoriale spre scoarța cerebrală.",
+   "en": "A relay that sends sensory information to the cortex."
+  }
+ },
+ {
+  "id": "hypothalamus",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "hypothalamus"
+  ],
+  "name": {
+   "ro": "Hipotalamusul",
+   "en": "Hypothalamus"
+  },
+  "desc": {
+   "ro": "Controlează temperatura, foamea, setea și hipofiza.",
+   "en": "Controls temperature, hunger, thirst and the pituitary gland."
+  }
+ },
+ {
+  "id": "pituitary-gland",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "pituitary gland"
+  ],
+  "name": {
+   "ro": "Hipofiza",
+   "en": "Pituitary gland"
+  },
+  "desc": {
+   "ro": "Glandă mică sub creier care conduce sistemul endocrin.",
+   "en": "Small gland under the brain that directs the endocrine system."
+  }
+ },
+ {
+  "id": "optic-nerve",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "optic nerve"
+  ],
+  "name": {
+   "ro": "Nervul optic",
+   "en": "Optic nerve"
+  },
+  "desc": {
+   "ro": "Duce imaginile de la retină spre creier.",
+   "en": "Carries images from the retina to the brain."
+  }
+ },
+ {
+  "id": "hippocampus",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "hippocampus"
+  ],
+  "name": {
+   "ro": "Hipocampul",
+   "en": "Hippocampus"
+  },
+  "desc": {
+   "ro": "Structură în formă de căluț de mare; formează amintiri noi.",
+   "en": "A seahorse-shaped structure; forms new memories."
+  }
+ },
+ {
+  "id": "insula",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "insula"
+  ],
+  "name": {
+   "ro": "Insula",
+   "en": "Insula"
+  },
+  "desc": {
+   "ro": "Lob ascuns în adâncul creierului; gust, emoții și senzații interne.",
+   "en": "A lobe hidden deep in the brain; taste, emotion and inner sensations."
+  }
+ },
+ {
+  "id": "cingulate-gyrus",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "cingulate gyrus"
+  ],
+  "name": {
+   "ro": "Girusul cingular",
+   "en": "Cingulate gyrus"
+  },
+  "desc": {
+   "ro": "Deasupra corpului calos; emoții și atenție.",
+   "en": "Above the corpus callosum; emotion and attention."
+  }
+ },
+ {
+  "id": "lateral-ventricle",
+  "system": "nerves",
+  "tier": 1,
+  "src": [
+   "lateral ventricle"
+  ],
+  "name": {
+   "ro": "Ventriculii laterali",
+   "en": "Lateral ventricles"
+  },
+  "desc": {
+   "ro": "Cavități cu lichid cefalorahidian în fiecare emisferă.",
+   "en": "Cavities filled with cerebrospinal fluid in each hemisphere."
+  }
+ },
+ {
+  "id": "optic-chiasm",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "optic chiasm"
+  ],
+  "name": {
+   "ro": "Chiasma optică",
+   "en": "Optic chiasm"
+  },
+  "desc": {
+   "ro": "Locul unde nervii optici se încrucișează parțial.",
+   "en": "Where the optic nerves partly cross over."
+  }
+ },
+ {
+  "id": "optic-tract",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "optic tract"
+  ],
+  "name": {
+   "ro": "Tractul optic",
+   "en": "Optic tract"
+  },
+  "desc": {
+   "ro": "Continuă calea vizuală de la chiasmă spre talamus.",
+   "en": "Carries the visual pathway from the chiasm to the thalamus."
+  }
+ },
+ {
+  "id": "third-ventricle",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "third ventricle"
+  ],
+  "name": {
+   "ro": "Ventriculul al III-lea",
+   "en": "Third ventricle"
+  },
+  "desc": {
+   "ro": "Cavitate îngustă între cei doi talamusi.",
+   "en": "A narrow cavity between the two thalami."
+  }
+ },
+ {
+  "id": "fourth-ventricle",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "fourth ventricle"
+  ],
+  "name": {
+   "ro": "Ventriculul al IV-lea",
+   "en": "Fourth ventricle"
+  },
+  "desc": {
+   "ro": "Cavitate între trunchiul cerebral și cerebel.",
+   "en": "A cavity between the brainstem and the cerebellum."
+  }
+ },
+ {
+  "id": "caudate-nucleus",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "caudate nucleus"
+  ],
+  "name": {
+   "ro": "Nucleul caudat",
+   "en": "Caudate nucleus"
+  },
+  "desc": {
+   "ro": "Nucleu în formă de virgulă; mișcare și învățare.",
+   "en": "A comma-shaped nucleus; movement and learning."
+  }
+ },
+ {
+  "id": "putamen",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "putamen"
+  ],
+  "name": {
+   "ro": "Putamenul",
+   "en": "Putamen"
+  },
+  "desc": {
+   "ro": "Nucleu bazal care reglează mișcările.",
+   "en": "A basal nucleus that regulates movement."
+  }
+ },
+ {
+  "id": "globus-pallidus",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "globus pallidus"
+  ],
+  "name": {
+   "ro": "Globul palid",
+   "en": "Globus pallidus"
+  },
+  "desc": {
+   "ro": "Nucleu bazal lângă putamen; frânează mișcările nedorite.",
+   "en": "A basal nucleus beside the putamen; brakes unwanted movement."
+  }
+ },
+ {
+  "id": "amygdala",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "amygdala"
+  ],
+  "name": {
+   "ro": "Amigdala",
+   "en": "Amygdala"
+  },
+  "desc": {
+   "ro": "Nucleu în formă de migdală; frică și emoții.",
+   "en": "An almond-shaped nucleus; fear and emotion."
+  }
+ },
+ {
+  "id": "parahippocampal-gyrus",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "parahippocampal gyrus"
+  ],
+  "name": {
+   "ro": "Girusul parahipocampic",
+   "en": "Parahippocampal gyrus"
+  },
+  "desc": {
+   "ro": "Lângă hipocamp; memorie și recunoașterea locurilor.",
+   "en": "Next to the hippocampus; memory and recognising places."
+  }
+ },
+ {
+  "id": "fusiform-gyrus",
+  "system": "nerves",
+  "tier": 2,
+  "src": [
+   "fusiform gyrus"
+  ],
+  "name": {
+   "ro": "Girusul fusiform",
+   "en": "Fusiform gyrus"
+  },
+  "desc": {
+   "ro": "Pe fața de jos a creierului; recunoașterea fețelor.",
+   "en": "On the underside of the brain; recognising faces."
+  }
+ },
+ {
+  "id": "skin",
+  "system": "skin",
+  "tier": 1,
+  "src": [
+   "skin"
+  ],
+  "name": {
+   "ro": "Pielea",
+   "en": "Skin"
+  },
+  "desc": {
+   "ro": "Cel mai mare organ al corpului; protejează organismul.",
+   "en": "The largest organ of the body; protects the organism."
+  }
+ }
+]
