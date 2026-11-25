@@ -97,7 +97,7 @@ async function main() {
   for (const system of SYSTEMS) {
     const doc = new Document();
     const buffer = doc.createBuffer();
-    const scene = doc.createScene(system);
+    const scene = doc.createScene();
     for (const s of structures.filter(s => s.system === system)) {
       const { positions, indices } = geometry.get(s.id);
       for (let i = 0; i < positions.length; i++) positions[i] -= offset[i % 3];

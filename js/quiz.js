@@ -66,7 +66,8 @@ export function createQuiz({ structures, system, mode, detail, rng = Math.random
 
     choices(n = 4) {
       const target = queue[position];
-      const others = shuffle(inSystem.filter(s => s !== target), rng).slice(0, n - 1);
+      const pool = detail === 'all' ? inSystem : inSystem.filter(s => s.tier <= tiers[tierIndex]);
+      const others = shuffle(pool.filter(s => s !== target), rng).slice(0, n - 1);
       return shuffle([target, ...others], rng);
     },
   };

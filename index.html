@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anatomia 3D</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231a1a1a'/%3E%3Ccircle cx='11' cy='11' r='2.5' fill='%23d2452f'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" data-go="title">Anatomia<span class="brand-dot"></span></button>
+    <div class="lang" role="group" aria-label="Limba / Language">
+      <button data-lang="ro">RO</button><button data-lang="en">EN</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer class="credits" data-t="app.credits"></footer>
+</body>
+</html>

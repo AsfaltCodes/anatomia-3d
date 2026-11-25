@@ -77,6 +77,11 @@ test('choices include the current part and stay in the same system', () => {
   assert.ok(c.every(s => s.system === 'bones'));
 });
 
+test('choices on the main level come only from the main tier', () => {
+  const q = quiz('main', 'name');
+  assert.ok(q.choices(4).every(s => s.tier === 1));
+});
+
 test('isBetter: higher score wins, a tie goes to the faster time', () => {
   assert.ok(isBetter({ score: 90, timeMs: 5 }, null));
   assert.ok(isBetter({ score: 90, timeMs: 5 }, { score: 90, timeMs: 9 }));
