@@ -3,7 +3,7 @@
 // made of every OBJ element listed under its BodyParts3D concept names (src).
 import { readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { Document, NodeIO } from '@gltf-transform/core';
-import { EXTMeshoptCompression } from '@gltf-transform/extensions';
+import { ALL_EXTENSIONS, EXTMeshoptCompression } from '@gltf-transform/extensions';
 import { weld, simplify, reorder, quantize } from '@gltf-transform/functions';
 import { MeshoptEncoder, MeshoptSimplifier } from 'meshoptimizer';
 
@@ -92,7 +92,7 @@ async function main() {
   await MeshoptEncoder.ready;
   await MeshoptSimplifier.ready;
   mkdirSync('assets/models', { recursive: true });
-  const io = new NodeIO().registerExtensions([EXTMeshoptCompression]).registerDependencies({ 'meshopt.encoder': MeshoptEncoder });
+  const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.encoder': MeshoptEncoder });
 
   for (const system of SYSTEMS) {
     const doc = new Document();
