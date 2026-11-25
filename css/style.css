@@ -146,5 +146,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   .topbar, .credits, .menu { padding-left: 16px; padding-right: 16px; }
   .hud { left: 16px; right: 16px; flex-direction: column; }
   .answer { left: 16px; right: 16px; max-width: none; bottom: 150px; }
-  .side { right: 16px; bottom: 16px; }
+  .choices button { padding: 10px 12px; font-size: 14px; }
+  .side { left: 16px; right: 16px; bottom: 16px; align-items: stretch; }
+  .layers { display: flex; flex-wrap: wrap; gap: 2px 14px; padding: 8px 12px; }
+  .layers .eyebrow { display: none; }
+  .actions { justify-content: flex-end; }
+  .hint { display: none; }
 }
