@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createQuiz, isBetter } from '../js/quiz.js';
+import { createQuiz, isBetter, availableDetails } from '../js/quiz.js';
 
 const S = [
   { id: 'a', system: 'bones', tier: 1 },
@@ -77,9 +77,40 @@ test('choices include the current part and stay in the same system', () => {
   assert.ok(c.every(s => s.system === 'bones'));
 });
 
-test('choices on the main level come only from the main tier', () => {
+test('choices on the main level come only from the main tier when it is big enough', () => {
   const q = quiz('main', 'name');
-  assert.ok(q.choices(4).every(s => s.tier === 1));
+  assert.ok(q.choices(2).every(s => s.tier === 1));
+});
+
+const R = [
+  { id: 'h1', system: 'bones', region: 'head', tier: 1 },
+  { id: 'h2', system: 'bones', region: 'head', tier: 1 },
+  { id: 'h3', system: 'bones', region: 'head', tier: 2 },
+  { id: 'l1', system: 'bones', region: 'leg', tier: 1 },
+  { id: 'l2', system: 'bones', region: 'leg', tier: 1 },
+];
+
+test('a region limits the pool and the choices', () => {
+  const q = createQuiz({ structures: R, system: 'bones', region: 'head', mode: 'name', detail: 'all', rng: fixed });
+  assert.equal(q.progress.total, 3);
+  assert.ok(q.choices(4).every(s => s.region === 'head'));
+});
+
+test('no region means the whole system', () => {
+  const q = createQuiz({ structures: R, system: 'bones', region: null, mode: 'click', detail: 'all', rng: fixed });
+  assert.equal(q.progress.total, 5);
+});
+
+test('choices fall back to the whole pool when the active tier is too small', () => {
+  const q = createQuiz({ structures: R, system: 'bones', region: 'head', mode: 'name', detail: 'main', rng: fixed });
+  assert.equal(q.choices(3).length, 3);
+});
+
+test('availableDetails offers levels only when the main tier is a real subset of 4+', () => {
+  const tiers = (...t) => t.map((tier, i) => ({ id: String(i), tier }));
+  assert.deepEqual(availableDetails(tiers(1, 1, 1, 1, 2)), ['main', 'all', 'progressive']);
+  assert.deepEqual(availableDetails(tiers(1, 1, 1, 1)), ['all']);
+  assert.deepEqual(availableDetails(tiers(1, 2, 2, 2, 2)), ['all']);
 });
 
 test('isBetter: higher score wins, a tie goes to the faster time', () => {

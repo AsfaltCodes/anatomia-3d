@@ -11,8 +11,8 @@ export function shuffle(items, rng = Math.random) {
   return a;
 }
 
-export function createQuiz({ structures, system, mode, detail, rng = Math.random }) {
-  const inSystem = structures.filter(s => s.system === system);
+export function createQuiz({ structures, system, region = null, mode, detail, rng = Math.random }) {
+  const inSystem = structures.filter(s => s.system === system && (!region || s.region === region));
   const tiers = [...new Set(inSystem.map(s => s.tier))].sort();
   let tierIndex = 0;
   const ofTier = tier => shuffle(inSystem.filter(s => s.tier === tier), rng);
@@ -66,11 +66,17 @@ export function createQuiz({ structures, system, mode, detail, rng = Math.random
 
     choices(n = 4) {
       const target = queue[position];
-      const pool = detail === 'all' ? inSystem : inSystem.filter(s => s.tier <= tiers[tierIndex]);
+      const active = detail === 'all' ? inSystem : inSystem.filter(s => s.tier <= tiers[tierIndex]);
+      const pool = active.length >= n ? active : inSystem;
       const others = shuffle(pool.filter(s => s !== target), rng).slice(0, n - 1);
       return shuffle([target, ...others], rng);
     },
   };
+}
+
+export function availableDetails(pool) {
+  const main = pool.filter(s => s.tier === 1).length;
+  return main >= 4 && main < pool.length ? ['main', 'all', 'progressive'] : ['all'];
 }
 
 export function isBetter(a, b) {

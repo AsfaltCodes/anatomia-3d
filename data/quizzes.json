@@ -1,0 +1,16 @@
+[
+ {"id":"bones","system":"bones","region":null,"name":{"ro":"Tot scheletul","en":"Whole skeleton"}},
+ {"id":"bones-head","system":"bones","region":"head","name":{"ro":"Oasele capului","en":"Head bones"}},
+ {"id":"bones-trunk","system":"bones","region":"trunk","name":{"ro":"Oasele trunchiului","en":"Trunk bones"}},
+ {"id":"bones-upper-limb","system":"bones","region":"upper-limb","name":{"ro":"Oasele membrului superior","en":"Arm and hand bones"}},
+ {"id":"bones-lower-limb","system":"bones","region":"lower-limb","name":{"ro":"Oasele membrului inferior","en":"Leg and foot bones"}},
+ {"id":"muscles","system":"muscles","region":null,"name":{"ro":"Toți mușchii","en":"All muscles"}},
+ {"id":"muscles-head-neck","system":"muscles","region":"head-neck","name":{"ro":"Mușchii gâtului","en":"Neck muscles"}},
+ {"id":"muscles-trunk","system":"muscles","region":"trunk","name":{"ro":"Mușchii trunchiului","en":"Trunk muscles"}},
+ {"id":"muscles-upper-limb","system":"muscles","region":"upper-limb","name":{"ro":"Mușchii membrului superior","en":"Arm muscles"}},
+ {"id":"muscles-lower-limb","system":"muscles","region":"lower-limb","name":{"ro":"Mușchii membrului inferior","en":"Leg muscles"}},
+ {"id":"nerves","system":"nerves","region":null,"name":{"ro":"Tot sistemul nervos","en":"Whole nervous system"}},
+ {"id":"nerves-cortex","system":"nerves","region":"cortex","name":{"ro":"Scoarța cerebrală","en":"Cerebral cortex"}},
+ {"id":"nerves-deep","system":"nerves","region":"deep","name":{"ro":"Structurile profunde ale creierului","en":"Deep brain structures"}},
+ {"id":"nerves-brainstem","system":"nerves","region":"brainstem","name":{"ro":"Trunchiul cerebral și măduva","en":"Brainstem and spinal cord"}}
+]
