@@ -121,13 +121,15 @@ export async function createThumbnails(structures, quizzes) {
     canvas.getContext('2d').drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height);
   }
 
-  let spinning = null;
+  // Each spinning card is { canvas, quizId, phase }; one loop redraws them all.
+  let spinning = [];
   let raf = 0;
+  let start = 0;
   function spin(now) {
-    if (!spinning) return;
-    const { canvas, quizId, start } = spinning;
-    if (!canvas.isConnected) { spinning = null; return; }
-    render(canvas, quizId, START_ANGLE + SPIN_SPEED * (now - start) / 1000);
+    spinning = spinning.filter(c => c.canvas.isConnected);
+    if (!spinning.length) { raf = 0; return; }
+    const angle = START_ANGLE + SPIN_SPEED * (now - start) / 1000;
+    spinning.forEach(c => render(c.canvas, c.quizId, angle + c.phase));
     raf = requestAnimationFrame(spin);
   }
 
@@ -139,17 +141,15 @@ export async function createThumbnails(structures, quizzes) {
     draw(canvas, quizId) {
       render(canvas, quizId, START_ANGLE);
     },
-    spin(canvas, quizId) {
-      cancelAnimationFrame(raf);
-      spinning = { canvas, quizId, start: performance.now() };
-      raf = requestAnimationFrame(spin);
+    spin(cards) {
+      const keep = new Set(cards.map(c => c.canvas));
+      spinning.filter(c => !keep.has(c.canvas) && c.canvas.isConnected).forEach(c => render(c.canvas, c.quizId, START_ANGLE));
+      spinning = cards.map(c => ({ phase: 0, ...c }));
+      if (!spinning.length) { cancelAnimationFrame(raf); raf = 0; return; }
+      if (!raf) { start = performance.now(); raf = requestAnimationFrame(spin); }
     },
     stop() {
-      if (!spinning) return;
-      const { canvas, quizId } = spinning;
-      spinning = null;
-      cancelAnimationFrame(raf);
-      if (canvas.isConnected) render(canvas, quizId, START_ANGLE);
+      this.spin([]);
     },
   };
 }

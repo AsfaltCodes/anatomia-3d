@@ -264,29 +264,25 @@ function homePage() {
     </a>`;
   }
 
+  const cardSpin = el => ({ canvas: el.querySelector('.thumb'), quizId: el.dataset.quiz });
+
   function spinCard(el) {
     if (!thumbs || reducedMotion.matches || el === spinning) return;
     spinning = el;
-    if (el) thumbs.spin(el.querySelector('.thumb'), el.dataset.quiz);
-    else thumbs.stop();
+    thumbs.spin(el ? [cardSpin(el)] : []);
   }
 
-  // Touch screens can't hover, so the card nearest the middle of the screen spins instead.
-  function spinCentreCard() {
+  // Touch screens can't hover, so every card that is on screen spins, each a little out of step.
+  function spinVisibleCards() {
     scrollFrame = 0;
-    if (!noHover.matches || page !== self) return;
-    const middle = innerHeight / 2;
-    let best = null;
-    let bestDistance = Infinity;
-    app.querySelectorAll('.card').forEach(el => {
+    if (!thumbs || !noHover.matches || reducedMotion.matches || page !== self) return;
+    const visible = [...app.querySelectorAll('.card')].filter(el => {
       const r = el.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > innerHeight) return;
-      const d = Math.abs(r.top + r.height / 2 - middle);
-      if (d < bestDistance) { bestDistance = d; best = el; }
+      return r.bottom > 0 && r.top < innerHeight;
     });
-    spinCard(best);
+    thumbs.spin(visible.map((el, i) => ({ ...cardSpin(el), phase: i * 0.9 })));
   }
-  const onScroll = () => { scrollFrame ||= requestAnimationFrame(spinCentreCard); };
+  const onScroll = () => { scrollFrame ||= requestAnimationFrame(spinVisibleCards); };
 
   function drawThumbnails() {
     if (!thumbs) return;
@@ -301,7 +297,7 @@ function homePage() {
       el.addEventListener('pointerleave', () => spinCard(null));
       el.addEventListener('blur', () => spinCard(null));
     });
-    spinCentreCard();
+    spinVisibleCards();
   }
 
   const self = {
