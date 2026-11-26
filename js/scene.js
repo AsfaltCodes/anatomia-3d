@@ -16,6 +16,8 @@ const TONES = { bones: 0xebe6e0, muscles: 0xdcc4bf, nerves: 0xe3c07a, skin: 0xd9
 const STATE_COLORS = { wrong: SLATE, target: PINK, correct: PINK };
 const DIMMED_OPACITY = 0.18;
 const CLICK_TOLERANCE_PX = 6;
+const TOUCH_PICK_RADIUS = 16;
+const MOUSE_PICK_RADIUS = 5;
 
 const gltfCache = new Map();
 
@@ -104,12 +106,27 @@ export async function createScene(canvas, structures) {
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
 
-  function meshAt(event) {
+  // Thin parts (nerves) are a pixel or two wide, so if nothing is exactly under the pointer
+  // we also look at points on rings around it and take the hit closest to the centre.
+  const PICK_RINGS = [0, 0.5, 1];
+  const PICK_DIRECTIONS = 8;
+
+  function meshAt(event, radius = 0) {
     const rect = canvas.getBoundingClientRect();
-    pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
-    raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(pickable.filter(m => layers[byId.get(m.name).system]), false)[0];
-    return hit ? hit.object.name : null;
+    const targets = pickable.filter(m => layers[byId.get(m.name).system]);
+    for (const ring of radius ? PICK_RINGS : [0]) {
+      const steps = ring ? PICK_DIRECTIONS : 1;
+      for (let i = 0; i < steps; i++) {
+        const angle = (i / steps) * Math.PI * 2;
+        const x = event.clientX + Math.cos(angle) * ring * radius;
+        const y = event.clientY + Math.sin(angle) * ring * radius;
+        pointer.set(((x - rect.left) / rect.width) * 2 - 1, -((y - rect.top) / rect.height) * 2 + 1);
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(targets, false)[0];
+        if (hit) return hit.object.name;
+      }
+    }
+    return null;
   }
 
   let down = null;
@@ -122,13 +139,13 @@ export async function createScene(canvas, structures) {
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
     down = null;
     if (moved > CLICK_TOLERANCE_PX) return;
-    const id = meshAt(e);
+    const id = meshAt(e, e.pointerType === 'touch' ? TOUCH_PICK_RADIUS : MOUSE_PICK_RADIUS);
     pickListeners.forEach(cb => cb(id, e));
   });
   let hovered = null;
   canvas.addEventListener('pointermove', e => {
     if (down || e.pointerType === 'touch') return;
-    const id = meshAt(e);
+    const id = meshAt(e, MOUSE_PICK_RADIUS);
     if (id === hovered) return;
     hovered = id;
     outline.selectedObjects = id ? [meshes.get(id)] : [];
