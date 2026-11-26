@@ -250,5 +250,13 @@
   "system.all": {
     "ro": "Tot corpul",
     "en": "Whole body"
+  },
+  "play.zoomed": {
+    "ro": "Apropiat: atinge din nou",
+    "en": "Zoomed in: tap again"
+  },
+  "play.choose": {
+    "ro": "Care dintre ele?",
+    "en": "Which one?"
   }
 }

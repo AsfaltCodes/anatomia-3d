@@ -18,6 +18,11 @@ const DIMMED_OPACITY = 0.18;
 const CLICK_TOLERANCE_PX = 6;
 const TOUCH_PICK_RADIUS = 16;
 const MOUSE_PICK_RADIUS = 5;
+// Thin parts get an invisible, slightly fatter twin that is used only for tapping.
+const THIN_REGIONS = new Set(['peripheral', 'cranial']);
+const HIT_INFLATE_M = 0.0025;
+const CLOSE_DISTANCE_M = 0.35;
+const ZOOM_FACTOR = 2.5;
 
 const gltfCache = new Map();
 
@@ -96,6 +101,33 @@ export async function createScene(canvas, structures) {
     scene.add(group);
   });
 
+  // The twin copies the mesh with every vertex pushed out along its normal. It stays invisible
+  // (three.js still raycasts it) and carries the same name, so a hit maps back to the real part.
+  const hitMeshes = new Map();
+  for (const [id, mesh] of meshes) {
+    if (!THIN_REGIONS.has(byId.get(id).region)) continue;
+    mesh.updateWorldMatrix(true, false);
+    const scale = new THREE.Vector3();
+    mesh.matrixWorld.decompose(new THREE.Vector3(), new THREE.Quaternion(), scale);
+    const pos = mesh.geometry.getAttribute('position');
+    const nor = mesh.geometry.getAttribute('normal');
+    const out = new Float32Array(pos.count * 3);
+    for (let i = 0; i < pos.count; i++) {
+      out[i * 3] = pos.getX(i) + nor.getX(i) * HIT_INFLATE_M / scale.x;
+      out[i * 3 + 1] = pos.getY(i) + nor.getY(i) * HIT_INFLATE_M / scale.y;
+      out[i * 3 + 2] = pos.getZ(i) + nor.getZ(i) * HIT_INFLATE_M / scale.z;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(out, 3));
+    geometry.setIndex(mesh.geometry.index);
+    const twin = new THREE.Mesh(geometry, mesh.material);
+    twin.name = id;
+    twin.visible = false;
+    mesh.add(twin);
+    hitMeshes.set(id, twin);
+  }
+  const isThin = id => hitMeshes.has(id);
+
   const layers = { skin: true, muscles: true, bones: true, nerves: true };
   let pickable = [];
   const highlights = new Map();
@@ -106,14 +138,17 @@ export async function createScene(canvas, structures) {
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
 
-  // Thin parts (nerves) are a pixel or two wide, so if nothing is exactly under the pointer
-  // we also look at points on rings around it and take the hit closest to the centre.
+  // Thin parts (nerves) are a pixel or two wide, so besides the exact point we also look at points
+  // on rings around it. A direct hit on a big part wins outright; otherwise every distinct part
+  // found is returned, closest first, so the caller can zoom in or offer a choice when there are several.
   const PICK_RINGS = [0, 0.5, 1];
   const PICK_DIRECTIONS = 8;
 
-  function meshAt(event, radius = 0) {
+  function partsNear(event, radius = 0) {
     const rect = canvas.getBoundingClientRect();
     const targets = pickable.filter(m => layers[byId.get(m.name).system]);
+    const ids = [];
+    let point = null;
     for (const ring of radius ? PICK_RINGS : [0]) {
       const steps = ring ? PICK_DIRECTIONS : 1;
       for (let i = 0; i < steps; i++) {
@@ -123,10 +158,13 @@ export async function createScene(canvas, structures) {
         pointer.set(((x - rect.left) / rect.width) * 2 - 1, -((y - rect.top) / rect.height) * 2 + 1);
         raycaster.setFromCamera(pointer, camera);
         const hit = raycaster.intersectObjects(targets, false)[0];
-        if (hit) return hit.object.name;
+        if (!hit) continue;
+        if (ring === 0 && !isThin(hit.object.name)) return { ids: [hit.object.name], point: hit.point };
+        point ??= hit.point;
+        if (!ids.includes(hit.object.name)) ids.push(hit.object.name);
       }
     }
-    return null;
+    return { ids, point };
   }
 
   let down = null;
@@ -139,13 +177,13 @@ export async function createScene(canvas, structures) {
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
     down = null;
     if (moved > CLICK_TOLERANCE_PX) return;
-    const id = meshAt(e, e.pointerType === 'touch' ? TOUCH_PICK_RADIUS : MOUSE_PICK_RADIUS);
-    pickListeners.forEach(cb => cb(id, e));
+    const near = partsNear(e, e.pointerType === 'touch' ? TOUCH_PICK_RADIUS : MOUSE_PICK_RADIUS);
+    pickListeners.forEach(cb => cb(near.ids[0] ?? null, e, near));
   });
   let hovered = null;
   canvas.addEventListener('pointermove', e => {
     if (down || e.pointerType === 'touch') return;
-    const id = meshAt(e, MOUSE_PICK_RADIUS);
+    const id = partsNear(e, MOUSE_PICK_RADIUS).ids[0] ?? null;
     if (id === hovered) return;
     hovered = id;
     outline.selectedObjects = id ? [meshes.get(id)] : [];
@@ -229,7 +267,7 @@ export async function createScene(canvas, structures) {
         const inFocus = systems.includes(s) && focus.has(id);
         const faded = systems.includes(s) && !inFocus;
         Object.assign(mesh.material, { transparent: faded, opacity: faded ? DIMMED_OPACITY : 1, depthWrite: !faded });
-        if (inFocus) pickable.push(mesh);
+        if (inFocus) pickable.push(hitMeshes.get(id) ?? mesh);
       }
     },
 
@@ -252,6 +290,16 @@ export async function createScene(canvas, structures) {
 
     clearHighlights() {
       for (const id of [...highlights.keys()]) api.highlight(id, null);
+    },
+
+    isClose(point) {
+      return camera.position.distanceTo(point) < CLOSE_DISTANCE_M;
+    },
+
+    zoomToward(point, ms = 600) {
+      const direction = camera.position.clone().sub(point);
+      const distance = Math.max(direction.length() / ZOOM_FACTOR, controls.minDistance);
+      go({ target: point.clone(), position: point.clone().add(direction.setLength(distance)) }, ms);
     },
 
     flyTo(id, ms = 800) {

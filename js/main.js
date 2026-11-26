@@ -339,7 +339,7 @@ function ensureScene() {
   if (!scenePromise) {
     sceneCanvas = document.createElement('canvas');
     scenePromise = createScene(sceneCanvas, structures).then(scene => {
-      scene.onPick((id, e) => handlers.pick?.(id, e));
+      scene.onPick((id, e, near) => handlers.pick?.(id, e, near));
       scene.onHover((id, e) => handlers.hover?.(id, e));
       return scene;
     });
@@ -531,6 +531,28 @@ function playPage(quizDef) {
     });
   }
 
+  function showChooser(ids, e, onChoose) {
+    const rect = el.stage.getBoundingClientRect();
+    const box = document.createElement('div');
+    box.className = 'menu-panel chooser';
+    box.setAttribute('role', 'listbox');
+    box.setAttribute('aria-label', t('play.choose'));
+    box.innerHTML = ids.map(id => `<button role="option" data-id="${id}">${escape(nameOf(byId.get(id)))}</button>`).join('');
+    box.style.left = `${Math.min(e.clientX - rect.left, rect.width - 220)}px`;
+    box.style.top = `${Math.min(e.clientY - rect.top + 12, rect.height - 60 * ids.length)}px`;
+    box.onclick = ev => {
+      const id = ev.target.closest('[data-id]')?.dataset.id;
+      if (!id) return;
+      closeChooser();
+      onChoose(id);
+    };
+    el.stage.append(box);
+  }
+
+  function closeChooser() {
+    el.stage?.querySelector('.chooser')?.remove();
+  }
+
   function stageToast(text) {
     const node = document.createElement('div');
     node.className = 'stage-toast';
@@ -581,18 +603,30 @@ function playPage(quizDef) {
       else renderPrompt();
     };
     let lastEmptyTap = 0;
-    handlers.pick = id => {
+    const select = id => {
+      scene.clearHighlights();
+      selected = id ? byId.get(id) : null;
+      if (id) scene.highlight(id, 'target');
+      renderPrompt();
+    };
+    // Several thin parts under the finger: zoom in first; once close, Find takes the nearest
+    // and Explore/learn asks which one was meant.
+    handlers.pick = (id, e, { ids = [], point } = {}) => {
+      closeChooser();
       if (!id) {
         const now = performance.now();
         if (now - lastEmptyTap < 350) scene.frameFocus(500);
         lastEmptyTap = now;
       }
+      if (mode !== 'click' && mode !== 'learn') return;
+      if (ids.length > 1 && !scene.isClose(point)) {
+        scene.zoomToward(point);
+        stageToast(t('play.zoomed'));
+        return;
+      }
       if (mode === 'click') return answer(id, null);
-      if (mode !== 'learn') return;
-      scene.clearHighlights();
-      selected = id ? byId.get(id) : null;
-      if (id) scene.highlight(id, 'target');
-      renderPrompt();
+      if (ids.length > 1) return showChooser(ids.slice(0, 4), e, select);
+      select(id);
     };
   }
 
