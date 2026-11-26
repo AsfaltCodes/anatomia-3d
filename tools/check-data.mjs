@@ -35,6 +35,7 @@ for (const q of quizzes) {
   const size = structures.filter(s => s.system !== 'skin' && (q.system === 'all' || s.system === q.system) && (!q.region || s.region === q.region)).length;
   if (size < 4) errors.push(`quiz ${q.id}: only ${size} structures`);
   if (!q.name?.ro || !q.name?.en) errors.push(`quiz ${q.id}: missing name`);
+  for (const id of q.frame ?? []) if (!seen.has(id)) errors.push(`quiz ${q.id}: frame has unknown id ${id}`);
 }
 
 if (errors.length) {

@@ -1791,14 +1791,14 @@
  {
   "id": "optic-nerve",
   "system": "nerves",
-  "region": "deep",
+  "region": "cranial",
   "tier": 1,
   "src": [
    "optic nerve"
   ],
   "name": {
-   "ro": "Nervul optic",
-   "en": "Optic nerve"
+   "ro": "Nervul optic (II)",
+   "en": "Optic nerve (II)"
   },
   "desc": {
    "ro": "Duce imaginile de la retină spre creier.",
@@ -2157,14 +2157,14 @@
  {
   "id": "vagus-nerve",
   "system": "nerves",
-  "region": "peripheral",
+  "region": "cranial",
   "tier": 1,
   "src": [
    "za:Vagus nerve (X)"
   ],
   "name": {
-   "ro": "Nervul vag",
-   "en": "Vagus nerve"
+   "ro": "Nervul vag (X)",
+   "en": "Vagus nerve (X)"
   },
   "desc": {
    "ro": "Nervul cranian X; coboară până în abdomen și încetinește inima, controlează digestia.",
@@ -2340,14 +2340,14 @@
  {
   "id": "facial-nerve",
   "system": "nerves",
-  "region": "peripheral",
-  "tier": 2,
+  "region": "cranial",
+  "tier": 1,
   "src": [
    "za:Facial nerve (VII)"
   ],
   "name": {
-   "ro": "Nervul facial",
-   "en": "Facial nerve"
+   "ro": "Nervul facial (VII)",
+   "en": "Facial nerve (VII)"
   },
   "desc": {
    "ro": "Nervul cranian VII; mișcă mușchii feței (mimica).",
@@ -2357,16 +2357,18 @@
  {
   "id": "trigeminal-nerve",
   "system": "nerves",
-  "region": "peripheral",
-  "tier": 2,
+  "region": "cranial",
+  "tier": 1,
   "src": [
    "za:Trigeminal nerve (V)",
    "za:Sensory root of trigeminal nerve",
-   "za:Motor root of trigeminal nerve"
+   "za:Motor root of trigeminal nerve",
+   "za:Ophthalmic nerve",
+   "za:Maxillary nerve"
   ],
   "name": {
-   "ro": "Nervul trigemen",
-   "en": "Trigeminal nerve"
+   "ro": "Nervul trigemen (V)",
+   "en": "Trigeminal nerve (V)"
   },
   "desc": {
    "ro": "Nervul cranian V; sensibilitatea feței și mestecatul.",
@@ -2376,14 +2378,14 @@
  {
   "id": "hypoglossal-nerve",
   "system": "nerves",
-  "region": "peripheral",
-  "tier": 2,
+  "region": "cranial",
+  "tier": 1,
   "src": [
    "za:Hypoglossal nerve (XII)"
   ],
   "name": {
-   "ro": "Nervul hipoglos",
-   "en": "Hypoglossal nerve"
+   "ro": "Nervul hipoglos (XII)",
+   "en": "Hypoglossal nerve (XII)"
   },
   "desc": {
    "ro": "Nervul cranian XII; mișcă limba.",
@@ -2393,18 +2395,120 @@
  {
   "id": "accessory-nerve",
   "system": "nerves",
-  "region": "peripheral",
-  "tier": 2,
+  "region": "cranial",
+  "tier": 1,
   "src": [
    "za:Accessory nerve (XI)"
   ],
   "name": {
-   "ro": "Nervul accesor",
-   "en": "Accessory nerve"
+   "ro": "Nervul accesor (XI)",
+   "en": "Accessory nerve (XI)"
   },
   "desc": {
    "ro": "Nervul cranian XI; mișcă trapezul și sternocleidomastoidianul.",
    "en": "Cranial nerve XI; moves the trapezius and sternocleidomastoid."
+  }
+ },
+ {
+  "id": "olfactory-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Olfactory nerve (I)"
+  ],
+  "name": {
+   "ro": "Nervul olfactiv (I)",
+   "en": "Olfactory nerve (I)"
+  },
+  "desc": {
+   "ro": "Duce mirosurile de la nas la creier.",
+   "en": "Carries smell from the nose to the brain."
+  }
+ },
+ {
+  "id": "oculomotor-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Oculomotor nerve (III)"
+  ],
+  "name": {
+   "ro": "Nervul oculomotor (III)",
+   "en": "Oculomotor nerve (III)"
+  },
+  "desc": {
+   "ro": "Mișcă majoritatea mușchilor ochiului și ridică pleoapa.",
+   "en": "Moves most eye muscles and lifts the eyelid."
+  }
+ },
+ {
+  "id": "trochlear-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Trochlear nerve (IV)"
+  ],
+  "name": {
+   "ro": "Nervul trohlear (IV)",
+   "en": "Trochlear nerve (IV)"
+  },
+  "desc": {
+   "ro": "Cel mai subțire nerv cranian; rotește ochiul în jos și înăuntru.",
+   "en": "The thinnest cranial nerve; turns the eye down and in."
+  }
+ },
+ {
+  "id": "abducens-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Abducens nerve (VI)"
+  ],
+  "name": {
+   "ro": "Nervul abducens (VI)",
+   "en": "Abducens nerve (VI)"
+  },
+  "desc": {
+   "ro": "Mișcă ochiul spre exterior.",
+   "en": "Moves the eye outward."
+  }
+ },
+ {
+  "id": "vestibulocochlear-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Vestibulocochlear nerve (VIII)"
+  ],
+  "name": {
+   "ro": "Nervul vestibulocohlear (VIII)",
+   "en": "Vestibulocochlear nerve (VIII)"
+  },
+  "desc": {
+   "ro": "Duce auzul și echilibrul de la urechea internă la creier.",
+   "en": "Carries hearing and balance from the inner ear to the brain."
+  }
+ },
+ {
+  "id": "glossopharyngeal-nerve",
+  "system": "nerves",
+  "region": "cranial",
+  "tier": 1,
+  "src": [
+   "za:Glossopharyngeal nerve (IX)"
+  ],
+  "name": {
+   "ro": "Nervul glosofaringian (IX)",
+   "en": "Glossopharyngeal nerve (IX)"
+  },
+  "desc": {
+   "ro": "Gustul din spatele limbii și înghițirea.",
+   "en": "Taste at the back of the tongue and swallowing."
   }
  },
  {

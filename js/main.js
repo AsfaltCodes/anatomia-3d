@@ -610,7 +610,7 @@ function playPage(quizDef) {
       el.stage.prepend(sceneCanvas);
       scene.setTheme(isDark());
       SYSTEMS.forEach(s => scene.setLayer(s, explore || s === system || s === 'skin'));
-      scene.setFocus(explore ? QUIZ_SYSTEMS : [system], pool.map(s => s.id));
+      scene.setFocus(explore ? QUIZ_SYSTEMS : [system], pool.map(s => s.id), quizDef.frame);
       scene.resume();
       wire();
       start();

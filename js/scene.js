@@ -219,8 +219,8 @@ export async function createScene(canvas, structures) {
     },
 
     // The focused parts are pickable; the rest of their system stays visible but faded, for context.
-    setFocus(systems, ids) {
-      focusIds = ids;
+    setFocus(systems, ids, frameIds = ids) {
+      focusIds = frameIds;
       const focus = new Set(ids);
       pickable = [];
       for (const [id, mesh] of meshes) {

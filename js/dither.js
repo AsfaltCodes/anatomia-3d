@@ -92,7 +92,8 @@ export async function createThumbnails(structures, quizzes) {
     const shown = systemsOf(quiz);
     const ids = new Set(structures.filter(s => shown.includes(s.system) && (!quiz.region || s.region === quiz.region)).map(s => s.id));
     const meshes = [];
-    shown.forEach(system => groups[system].traverse(o => { if (o.isMesh && ids.has(o.name)) meshes.push(o); }));
+    const framed = new Set(quiz.frame ?? ids);
+    shown.forEach(system => groups[system].traverse(o => { if (o.isMesh && framed.has(o.name)) meshes.push(o); }));
     return [quiz.id, { systems: shown, ids, box: boxOf(meshes) }];
   }));
 

@@ -14,5 +14,6 @@
  {"id":"nerves-cortex","system":"nerves","region":"cortex","name":{"ro":"Scoarța cerebrală","en":"Cerebral cortex"}},
  {"id":"nerves-deep","system":"nerves","region":"deep","name":{"ro":"Structurile profunde ale creierului","en":"Deep brain structures"}},
  {"id":"nerves-brainstem","system":"nerves","region":"brainstem","name":{"ro":"Trunchiul cerebral și măduva","en":"Brainstem and spinal cord"}},
- {"id":"nerves-peripheral","system":"nerves","region":"peripheral","name":{"ro":"Nervii periferici","en":"Peripheral nerves"}}
+ {"id":"nerves-peripheral","system":"nerves","region":"peripheral","name":{"ro":"Nervii periferici","en":"Peripheral nerves"}},
+ {"id":"nerves-cranial","system":"nerves","region":"cranial","name":{"ro":"Nervii cranieni","en":"Cranial nerves"},"frame":["olfactory-nerve","optic-nerve","oculomotor-nerve","trochlear-nerve","trigeminal-nerve","abducens-nerve","facial-nerve","vestibulocochlear-nerve","glossopharyngeal-nerve","hypoglossal-nerve"]}
 ]
