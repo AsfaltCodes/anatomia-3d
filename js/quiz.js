@@ -11,8 +11,8 @@ export function shuffle(items, rng = Math.random) {
   return a;
 }
 
-export function createQuiz({ structures, system, region = null, mode, detail, rng = Math.random }) {
-  const inSystem = structures.filter(s => s.system === system && (!region || s.region === region));
+export function createQuiz({ structures, system, region = null, mode, detail, ids = null, rng = Math.random }) {
+  const inSystem = structures.filter(s => s.system === system && (!region || s.region === region) && (!ids || ids.includes(s.id)));
   const tiers = [...new Set(inSystem.map(s => s.tier))].sort();
   let tierIndex = 0;
   const ofTier = tier => shuffle(inSystem.filter(s => s.tier === tier), rng);
@@ -21,9 +21,11 @@ export function createQuiz({ structures, system, region = null, mode, detail, rn
   let position = 0;
   let tries = 0;
   const points = [];
+  const answered = [];
 
   function next(earned) {
     points.push(earned);
+    answered.push({ structure: queue[position], points: earned });
     position++;
     tries = 0;
     if (position === queue.length && detail === 'progressive' && score() >= UNLOCK_SCORE && tierIndex < tiers.length - 1) {
@@ -43,6 +45,8 @@ export function createQuiz({ structures, system, region = null, mode, detail, rn
     get finished() { return position >= queue.length; },
     get progress() { return { done: position, total: queue.length }; },
     score,
+    answered: () => answered.map(a => ({ id: a.structure.id, points: a.points })),
+    mistakes: () => answered.filter(a => a.points < 100).map(a => a.structure),
 
     answer(id) {
       const target = queue[position];
@@ -72,6 +76,16 @@ export function createQuiz({ structures, system, region = null, mode, detail, rn
       return shuffle([target, ...others], rng);
     },
   };
+}
+
+// Parts missed in this game join the list; parts answered right on the first try leave it.
+export function updateMissed(prev, answered) {
+  const missed = new Set(prev);
+  for (const { id, points } of answered) {
+    if (points === 100) missed.delete(id);
+    else missed.add(id);
+  }
+  return [...missed];
 }
 
 export function availableDetails(pool) {

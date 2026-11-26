@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createQuiz, isBetter, availableDetails, isComplete } from '../js/quiz.js';
+import { createQuiz, isBetter, availableDetails, isComplete, updateMissed } from '../js/quiz.js';
 
 const S = [
   { id: 'a', system: 'bones', tier: 1 },
@@ -118,6 +118,24 @@ test('isComplete: a record counts for the card only if it covered every part', (
   assert.ok(!isComplete({ score: 100, timeMs: 1, total: 7 }, 13));
   assert.ok(!isComplete({ score: 100, timeMs: 1 }, 13));
   assert.ok(!isComplete(null, 13));
+});
+
+test('mistakes() lists parts not answered right on the first try, in quiz order', () => {
+  const q = createQuiz({ structures: R, system: 'bones', region: 'head', mode: 'click', detail: 'all', rng: fixed });
+  const first = q.current; q.answer(first.id);
+  const second = q.current; q.answer('x'); q.answer(second.id);
+  const third = q.current; q.skip();
+  assert.deepEqual(q.mistakes().map(s => s.id), [second.id, third.id]);
+});
+
+test('createQuiz with ids restricts the pool', () => {
+  const q = createQuiz({ structures: R, system: 'bones', mode: 'click', detail: 'all', ids: ['h3', 'l1'], rng: fixed });
+  assert.equal(q.progress.total, 2);
+});
+
+test('updateMissed adds new mistakes and drops parts answered right', () => {
+  const answered = [{ id: 'a', points: 100 }, { id: 'b', points: 33 }, { id: 'c', points: 0 }];
+  assert.deepEqual(updateMissed(['a', 'd'], answered).sort(), ['b', 'c', 'd']);
 });
 
 test('isBetter: higher score wins, a tie goes to the faster time', () => {

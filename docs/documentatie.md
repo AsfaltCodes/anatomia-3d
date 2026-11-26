@@ -116,6 +116,12 @@ Când scrii numele, jocul este „îngăduitor”:
 ### Mod luminos și mod întunecat
 Butonul cu soare/lună din bara de sus schimbă tema. La prima vizită, site-ul folosește tema dispozitivului (`prefers-color-scheme`); după ce apeși butonul, alegerea ta se ține minte. Modelul 3D, imaginile de pe carduri și lupa de pe titlu își schimbă și ele culorile.
 
+### Învățare: greșeli, repetare, etichete, indicii
+- **Greșelile:** la finalul unui quiz, fereastra cu rezultatul arată lista structurilor la care ai greșit. Butonul **Arată** te duce direct la structură, o colorează și îi arată numele.
+- **Repetă greșelile:** site-ul ține minte, pentru fiecare quiz, structurile greșite. Ele apar în lista de moduri ca „Repetă greșelile (N)”: un quiz doar cu ele. Când găsești o structură din prima, ea iese din listă (`updateMissed` din `js/quiz.js`).
+- **Etichete:** un mod fără scor în care fiecare structură are o etichetă cu numele, ca în atlas. Atingi o etichetă ca să-i ascunzi numele („?”) și să te verifici singur; „Ascunde tot” le ascunde pe toate. Când etichetele s-ar suprapune, rămâne doar punctul; atingerea punctului îi aduce numele în față.
+- **Indicii:** în modul „Numește → Scrie”, după un răspuns greșit apare un indiciu: întâi prima literă a fiecărui cuvânt, apoi și ultima literă (`hintFor` din `js/i18n.js`).
+
 ### Explorează corpul
 Primul card de pe pagina principală, **Explorează corpul**, deschide tot corpul fără scor: pielea, mușchii, oasele și sistemul nervos, toate deodată. Din **Straturi** ascunzi sau arăți fiecare sistem (de exemplu, ascunzi mușchii ca să ajungi la oase), iar o atingere pe orice structură o colorează cu roz și îi arată numele și descrierea.
 

@@ -258,5 +258,37 @@
   "play.choose": {
     "ro": "Care dintre ele?",
     "en": "Which one?"
+  },
+  "mode.labels": {
+    "ro": "Etichete",
+    "en": "Labels"
+  },
+  "mode.review": {
+    "ro": "Repetă greșelile",
+    "en": "Review mistakes"
+  },
+  "results.mistakes": {
+    "ro": "Greșeli",
+    "en": "Mistakes"
+  },
+  "results.show": {
+    "ro": "Arată",
+    "en": "Show"
+  },
+  "results.review": {
+    "ro": "Repetă greșelile",
+    "en": "Review mistakes"
+  },
+  "play.hint": {
+    "ro": "Indiciu",
+    "en": "Hint"
+  },
+  "labels.hideAll": {
+    "ro": "Ascunde tot",
+    "en": "Hide all"
+  },
+  "labels.showAll": {
+    "ro": "Arată tot",
+    "en": "Show all"
   }
 }

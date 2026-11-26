@@ -44,3 +44,9 @@ export function matches(input, structure) {
   if (!guess) return false;
   return [structure.name.ro, structure.name.en].some(name => acceptedAnswers(name).includes(guess));
 }
+
+// "Mușchiul biceps" → try 1: "M_______ b_____"; try 2 also shows the last letter.
+export function hintFor(name, tries) {
+  const hidden = name.replace(/\S+/g, word => word[0] + '_'.repeat([...word].length - 1));
+  return tries < 2 ? hidden : hidden.slice(0, -1) + name.slice(-1);
+}

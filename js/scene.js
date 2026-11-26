@@ -248,6 +248,7 @@ export async function createScene(canvas, structures) {
   }
 
   let focusIds = [];
+  const anchors = new Map();
   const api = {
     get layers() { return { ...layers }; },
 
@@ -290,6 +291,37 @@ export async function createScene(canvas, structures) {
 
     clearHighlights() {
       for (const id of [...highlights.keys()]) api.highlight(id, null);
+    },
+
+    // A label's anchor is the vertex nearest the part's box centre, so paired left/right
+    // parts get a point on one side instead of the empty space between them.
+    anchorOf(id) {
+      if (anchors.has(id)) return anchors.get(id);
+      const mesh = meshes.get(id);
+      const center = boxOf([mesh]).getCenter(new THREE.Vector3());
+      const pos = mesh.geometry.getAttribute('position');
+      const v = new THREE.Vector3();
+      let best = center;
+      let bestDistance = Infinity;
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+        const d = v.distanceToSquared(center);
+        if (d < bestDistance) { bestDistance = d; best = v.clone(); }
+      }
+      anchors.set(id, best);
+      return best;
+    },
+
+    // Screen positions (canvas pixels) of the parts' anchors; hidden when behind the camera or off screen.
+    projectAnchors(ids) {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      return ids.filter(id => layers[byId.get(id).system]).map(id => {
+        const p = api.anchorOf(id).clone().project(camera);
+        const x = (p.x + 1) / 2 * w;
+        const y = (1 - p.y) / 2 * h;
+        return { id, x, y, visible: p.z < 1 && x >= 0 && x <= w && y >= 0 && y <= h };
+      });
     },
 
     isClose(point) {

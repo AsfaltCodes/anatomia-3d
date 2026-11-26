@@ -219,6 +219,22 @@ body[data-page="play"] { overflow: hidden; overscroll-behavior: none; }
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
 .toast, .stage-toast { background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: var(--radius); font-size: 14px; white-space: nowrap; animation: toast 2.6s forwards; }
+.tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.tag { position: absolute; left: 0; top: 0; pointer-events: auto; display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 8px 0 0; margin: -16px 0 0 -5px; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.tag i { width: 10px; height: 10px; border-radius: 50%; background: var(--pink); border: 2px solid var(--bg); flex: none; }
+.tag span { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; }
+.tag.hidden span { font-size: 0; }
+.tag.hidden span::after { content: '?'; font-size: 13px; color: var(--pink-deep); }
+.tag.dot span { display: none; }
+.tag.dot { padding: 0; }
+.tag.flip { flex-direction: row-reverse; translate: calc(-100% + 10px) 0; padding: 0 0 0 8px; }
+.hint-line { margin-top: 6px; min-height: 1.2em; font-size: 14px; color: var(--pink-deep); font-variant-ligatures: none; letter-spacing: .04em; }
+.mistakes { margin: 16px 0 0; text-align: left; }
+.mistakes-title { font-weight: 600; margin-bottom: 6px; }
+.mistakes ul { list-style: none; padding: 0; margin: 0; max-height: 220px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.mistakes li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 10px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.mistakes li:last-child { border-bottom: 0; }
+.link { color: var(--pink-deep); font-weight: 600; min-height: 36px; padding: 0 6px; }
 .chooser { position: absolute; z-index: 6; min-width: 200px; max-width: 260px; }
 .chooser button { min-height: 44px; padding: 0 12px; text-align: left; border-radius: 6px; font-weight: 500; }
 .chooser button:hover, .chooser button:focus-visible { background: var(--pink-soft); color: var(--pink-deep); }

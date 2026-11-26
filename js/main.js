@@ -1,6 +1,6 @@
-import { t, setStrings, setLang, getLang, nameOf, descOf, matches, normalize } from './i18n.js';
+import { t, setStrings, setLang, getLang, nameOf, descOf, matches, normalize, hintFor } from './i18n.js';
 import { load, save } from './storage.js';
-import { createQuiz, availableDetails, isComplete } from './quiz.js';
+import { createQuiz, availableDetails, isComplete, updateMissed } from './quiz.js';
 import { createScene, SYSTEMS, hasWebGL } from './scene.js';
 import { createThumbnails } from './dither.js';
 import { showResults, formatTime } from './results.js';
@@ -13,7 +13,8 @@ const nav = document.querySelector('.systems');
 const drawer = document.getElementById('drawer');
 const burger = document.querySelector('.burger');
 const QUIZ_SYSTEMS = ['bones', 'muscles', 'nerves'];
-const MODES = ['click', 'name', 'learn'];
+const MODES = ['click', 'name', 'learn', 'labels'];
+const NO_SCORE_MODES = ['learn', 'labels'];
 const FEEDBACK_MS = 650;
 const REVEAL_MS = 1400;
 const MAX_SEARCH_RESULTS = 8;
@@ -174,7 +175,7 @@ function infoPage(kind) {
       app.querySelector('[data-reset-progress]')?.addEventListener('click', () => {
         if (!confirm(t('privacy.confirm'))) return;
         try {
-          Object.keys(localStorage).filter(k => k.startsWith('best:')).forEach(k => localStorage.removeItem(k));
+          Object.keys(localStorage).filter(k => k.startsWith('best:') || k.startsWith('missed:')).forEach(k => localStorage.removeItem(k));
         } catch {}
         forgetTheme();
         toast(t('privacy.done'));
@@ -363,7 +364,13 @@ function playPage(quizDef) {
   let clock = 0;
   let locked = false;
   let selected = null;
+  let reviewing = false;
+  let typedWrong = 0;
+  let tagsLoop = 0;
+  let tagsHidden = new Set();
   let el = {};
+  const missedKey = `missed:${quizDef.id}`;
+  const missedIds = () => load(missedKey, []).filter(id => pool.some(s => s.id === id));
   const timers = new Set();
   const later = (fn, ms) => timers.add(setTimeout(fn, ms));
   const self = {};
@@ -383,7 +390,7 @@ function playPage(quizDef) {
         </div>
         <div class="toolbar">
           <label class="select"><span class="sr-only">${t('mode.label')}</span>
-            <select data-mode>${MODES.map(m => `<option value="${m}" ${m === mode ? 'selected' : ''}>${t(`mode.${m}`)}</option>`).join('')}</select>
+            <select data-mode></select>
           </label>
           <label class="select" data-detail-wrap><span class="sr-only">${t('detail.label')}</span>
             <select data-detail>${details.map(d => `<option value="${d}" ${d === detail ? 'selected' : ''}>${t(`detail.${d}`)}</option>`).join('')}</select>
@@ -393,6 +400,7 @@ function playPage(quizDef) {
             <div class="menu-panel up">${SYSTEMS.map(s => `<label class="check"><input type="checkbox" data-layer="${s}"> ${t(`system.${s}`)}</label>`).join('')}</div>
           </details>
           <span class="spacer"></span>
+          <button class="tool" data-tags-toggle hidden></button>
           <button class="tool" data-reset title="${t('play.reset')}">${ICONS.reset}<span class="label">${t('play.reset')}</span></button>
           <button class="tool" data-skip title="${t('play.skip')}">${ICONS.skip}<span class="label">${t('play.skip')}</span></button>
         </div>
@@ -410,10 +418,22 @@ function playPage(quizDef) {
     };
   }
 
+  function renderModeOptions() {
+    const missed = missedIds().length;
+    const options = [...MODES, ...(missed && !explore ? ['review'] : [])];
+    const current = reviewing ? 'review' : mode;
+    el.root.querySelector('[data-mode]').innerHTML = options.map(m =>
+      `<option value="${m}" ${m === current ? 'selected' : ''}>${t(`mode.${m}`)}${m === 'review' ? ` (${missed})` : ''}</option>`).join('');
+  }
+
   function syncToolbar() {
-    el.root.querySelector('[data-detail-wrap]').hidden = mode === 'learn' || details.length < 2;
+    renderModeOptions();
+    el.root.querySelector('[data-detail-wrap]').hidden = NO_SCORE_MODES.includes(mode) || reviewing || details.length < 2;
     el.root.querySelector('[data-mode]').closest('.select').hidden = explore;
-    el.root.querySelector('[data-skip]').hidden = mode === 'learn';
+    el.root.querySelector('[data-skip]').hidden = NO_SCORE_MODES.includes(mode);
+    const toggle = el.root.querySelector('[data-tags-toggle]');
+    toggle.hidden = mode !== 'labels';
+    toggle.textContent = t(tagsHidden.size ? 'labels.showAll' : 'labels.hideAll');
     el.root.querySelectorAll('[data-layer]').forEach(box => { box.checked = scene.layers[box.dataset.layer]; });
   }
 
@@ -453,13 +473,19 @@ function playPage(quizDef) {
         `<button data-choice="${s.id}">${escape(nameOf(s))}</button>`).join('')}</div>`;
       el.sheet.querySelectorAll('[data-choice]').forEach(b => { b.onclick = () => answer(b.dataset.choice, b); });
     } else {
-      el.sheet.innerHTML = tabs + `<form class="type"><input autocomplete="off" spellcheck="false" placeholder="${t('play.placeholder')}" aria-label="${t('play.placeholder')}"><button class="btn btn-primary">${t('play.check')}</button></form>`;
+      typedWrong = 0;
+      el.sheet.innerHTML = tabs + `<form class="type"><input autocomplete="off" spellcheck="false" placeholder="${t('play.placeholder')}" aria-label="${t('play.placeholder')}"><button class="btn btn-primary">${t('play.check')}</button></form><p class="hint-line" aria-live="polite"></p>`;
       const input = el.sheet.querySelector('input');
       el.sheet.querySelector('form').onsubmit = e => {
         e.preventDefault();
         if (!input.value.trim()) return;
-        const result = answer(matches(input.value, quiz.current) ? quiz.current.id : '', null);
-        if (result === 'wrong') { input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake'); input.select(); }
+        const target = quiz.current;
+        const result = answer(matches(input.value, target) ? target.id : '', null);
+        if (result === 'wrong') {
+          input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake'); input.select();
+          typedWrong++;
+          el.sheet.querySelector('.hint-line').textContent = `${t('play.hint')}: ${hintFor(nameOf(target), typedWrong)}`;
+        }
       };
       if (matchMedia('(pointer: fine)').matches) input.focus();
     }
@@ -520,15 +546,90 @@ function playPage(quizDef) {
   function finish() {
     clearInterval(clock);
     el.sheet.hidden = true;
+    save(missedKey, updateMissed(load(missedKey, []), quiz.answered()));
+    const missed = missedIds().length;
+    renderModeOptions();
     showResults(el.dialog, {
       title: quizName(quizDef),
       score: quiz.score(),
       timeMs: performance.now() - startedAt,
       total: quiz.progress.total,
-      key: bestKey(quizDef.id, mode, detail),
+      key: bestKey(quizDef.id, reviewing ? 'review' : mode, detail),
+      mistakes: quiz.mistakes().map(s => ({ id: s.id, name: nameOf(s) })),
+      reviewCount: missed,
       onAgain: start,
       onAnother: () => { location.hash = '#/'; },
+      onShow: id => { switchMode('learn'); selectPart(id); scene.flyTo(id); },
+      onReview: () => switchMode('review'),
     });
+  }
+
+  function switchMode(value) {
+    reviewing = value === 'review';
+    mode = reviewing ? 'click' : value;
+    start();
+  }
+
+  function selectPart(id) {
+    scene.clearHighlights();
+    selected = id ? byId.get(id) : null;
+    if (id) scene.highlight(id, 'target');
+    renderPrompt();
+  }
+
+  // Labels mode: one tag per part, placed every frame at the part's projected anchor.
+  // Labels mode: one tag per part, placed every frame at the part's projected anchor.
+  // A tag that would overlap one already placed shows only its dot; tapping a dot brings
+  // its name to the front, and tapping a name hides it ("?") for self-testing.
+  function startTags() {
+    const box = document.createElement('div');
+    box.className = 'tags';
+    box.innerHTML = pool.map(s => `<button class="tag" data-id="${s.id}"><i></i><span>${escape(nameOf(s))}</span></button>`).join('');
+    const tags = new Map([...box.querySelectorAll('.tag')].map(tag => [tag.dataset.id, tag]));
+    const order = [...tags.keys()];
+    box.onclick = e => {
+      const tag = e.target.closest('.tag');
+      if (!tag) return;
+      const id = tag.dataset.id;
+      if (tag.classList.contains('dot')) {
+        order.splice(order.indexOf(id), 1);
+        order.unshift(id);
+        return;
+      }
+      tagsHidden.has(id) ? tagsHidden.delete(id) : tagsHidden.add(id);
+      tag.classList.toggle('hidden', tagsHidden.has(id));
+      syncToolbar();
+    };
+    el.stage.append(box);
+    tags.forEach((tag, id) => tag.classList.toggle('hidden', tagsHidden.has(id)));
+    const place = () => {
+      tagsLoop = requestAnimationFrame(place);
+      const width = el.stage.clientWidth;
+      const spots = new Map(scene.projectAnchors(order).map(a => [a.id, a]));
+      const taken = [];
+      for (const id of order) {
+        const tag = tags.get(id);
+        const spot = spots.get(id);
+        if (!spot?.visible) { tag.hidden = true; continue; }
+        tag.hidden = false;
+        tag.classList.remove('dot');
+        const w = tag.offsetWidth;
+        const h = tag.offsetHeight;
+        const flip = spot.x + w > width - 8;
+        const rect = flip ? { x: spot.x - w, y: spot.y - h / 2, w, h } : { x: spot.x, y: spot.y - h / 2, w, h };
+        const overlaps = taken.some(r => rect.x < r.x + r.w && r.x < rect.x + rect.w && rect.y < r.y + r.h && r.y < rect.y + rect.h);
+        tag.classList.toggle('dot', overlaps);
+        tag.classList.toggle('flip', flip && !overlaps);
+        tag.style.transform = `translate(${spot.x}px, ${spot.y}px)`;
+        if (!overlaps) taken.push(rect);
+      }
+    };
+    place();
+  }
+
+  function stopTags() {
+    cancelAnimationFrame(tagsLoop);
+    el.stage?.querySelector('.tags')?.remove();
   }
 
   function showChooser(ids, e, onChoose) {
@@ -571,8 +672,15 @@ function playPage(quizDef) {
     scene.frameFocus(0);
     el.sheet.hidden = true;
     el.sheet.innerHTML = '';
+    stopTags();
+    if (reviewing && !missedIds().length) reviewing = false;
     syncToolbar();
-    quiz = mode === 'learn' ? null : createQuiz({ structures, system, region: quizDef.region, mode, detail });
+    quiz = NO_SCORE_MODES.includes(mode) ? null : createQuiz({
+      structures, system, region: quizDef.region, mode,
+      detail: reviewing ? 'all' : detail,
+      ids: reviewing ? missedIds() : null,
+    });
+    if (mode === 'labels') startTags();
     if (quiz) {
       startedAt = performance.now();
       clock = setInterval(() => {
@@ -587,7 +695,12 @@ function playPage(quizDef) {
   }
 
   function wire() {
-    el.root.querySelector('[data-mode]').onchange = e => { mode = e.target.value; start(); };
+    el.root.querySelector('[data-mode]').onchange = e => switchMode(e.target.value);
+    el.root.querySelector('[data-tags-toggle]').onclick = () => {
+      tagsHidden = tagsHidden.size ? new Set() : new Set(pool.map(s => s.id));
+      el.stage.querySelectorAll('.tag').forEach(tag => tag.classList.toggle('hidden', tagsHidden.has(tag.dataset.id)));
+      syncToolbar();
+    };
     el.root.querySelector('[data-detail]').onchange = e => { detail = e.target.value; start(); };
     el.root.querySelectorAll('[data-layer]').forEach(box => { box.onchange = () => scene.setLayer(box.dataset.layer, box.checked); });
     el.root.querySelector('[data-reset]').onclick = () => scene.frameFocus(600);
@@ -597,18 +710,13 @@ function playPage(quizDef) {
       nextPrompt();
     };
     handlers.hover = id => {
-      if (mode !== 'learn' || selected) return;
+      if (!NO_SCORE_MODES.includes(mode) || selected) return;
       const s = id && byId.get(id);
       if (s) setPrompt(t(`system.${s.system}`), nameOf(s));
       else renderPrompt();
     };
     let lastEmptyTap = 0;
-    const select = id => {
-      scene.clearHighlights();
-      selected = id ? byId.get(id) : null;
-      if (id) scene.highlight(id, 'target');
-      renderPrompt();
-    };
+    const select = selectPart;
     // Several thin parts under the finger: zoom in first; once close, Find takes the nearest
     // and Explore/learn asks which one was meant.
     handlers.pick = (id, e, { ids = [], point } = {}) => {
@@ -618,7 +726,7 @@ function playPage(quizDef) {
         if (now - lastEmptyTap < 350) scene.frameFocus(500);
         lastEmptyTap = now;
       }
-      if (mode !== 'click' && mode !== 'learn') return;
+      if (mode === 'name') return;
       if (ids.length > 1 && !scene.isClose(point)) {
         scene.zoomToward(point);
         stageToast(t('play.zoomed'));
@@ -653,6 +761,7 @@ function playPage(quizDef) {
     leave() {
       timers.forEach(clearTimeout);
       clearInterval(clock);
+      stopTags();
       handlers.pick = handlers.hover = null;
       if (el.dialog?.open) el.dialog.close();
       scene?.clearHighlights();
@@ -660,7 +769,8 @@ function playPage(quizDef) {
     },
     relabel() {
       if (!scene) return;
-      el.root.querySelectorAll('[data-mode] option').forEach(o => { o.textContent = t(`mode.${o.value}`); });
+      syncToolbar();
+      el.stage.querySelectorAll('.tag span').forEach(span => { span.textContent = nameOf(byId.get(span.parentElement.dataset.id)); });
       el.root.querySelectorAll('[data-detail] option').forEach(o => { o.textContent = t(`detail.${o.value}`); });
       el.root.querySelectorAll('.check').forEach(label => { label.lastChild.textContent = ` ${t(`system.${label.querySelector('input').dataset.layer}`)}`; });
       el.root.querySelector('.layers .label').textContent = t('play.layers');

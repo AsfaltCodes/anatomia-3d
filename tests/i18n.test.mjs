@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalize, matches, setStrings, t, setLang, getLang, nameOf } from '../js/i18n.js';
+import { normalize, matches, setStrings, t, setLang, getLang, nameOf, hintFor } from '../js/i18n.js';
+
+test('hintFor reveals first letters, then word starts and the last letter', () => {
+  assert.equal(hintFor('Mușchiul biceps brahial', 1), 'M_______ b_____ b______');
+  assert.equal(hintFor('Mușchiul biceps brahial', 2), 'M_______ b_____ b_____l');
+  assert.equal(hintFor('Femurul', 1), 'F______');
+});
 
 test('normalize strips diacritics in both comma and cedilla forms', () => {
   assert.equal(normalize('  Mușchiul   BICEPS '), 'muschiul biceps');

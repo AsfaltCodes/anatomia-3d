@@ -54,7 +54,9 @@ export function bestScore(key) {
   return load(key, null);
 }
 
-export function showResults(dialog, { title, score, timeMs, total, key, onAgain, onAnother }) {
+const escape = text => text.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+export function showResults(dialog, { title, score, timeMs, total, key, mistakes = [], reviewCount = 0, onAgain, onAnother, onShow, onReview }) {
   const best = load(key, null);
   const record = isBetter({ score, timeMs }, best);
   if (record) save(key, { score, timeMs, total });
@@ -65,7 +67,12 @@ export function showResults(dialog, { title, score, timeMs, total, key, onAgain,
     <p class="results-title">${title}</p>
     <p class="results-score"><span>0</span>%</p>
     <p class="results-meta">${t('results.time')} ${formatTime(timeMs)}${record ? ` <span class="badge">${t('results.record')}</span>` : ''}</p>
+    ${mistakes.length ? `<div class="mistakes">
+      <p class="mistakes-title">${t('results.mistakes')} (${mistakes.length})</p>
+      <ul>${mistakes.map(m => `<li><span>${escape(m.name)}</span><button class="link" data-show="${m.id}">${t('results.show')}</button></li>`).join('')}</ul>
+    </div>` : ''}
     <div class="results-actions">
+      ${reviewCount ? `<button class="btn" data-review>${t('results.review')} (${reviewCount})</button>` : ''}
       <button class="btn btn-primary" data-again>${t('results.again')}</button>
       <button class="btn" data-another>${t('results.another')}</button>
     </div>`;
@@ -77,4 +84,6 @@ export function showResults(dialog, { title, score, timeMs, total, key, onAgain,
   if (score === 100) setTimeout(() => celebrate(confetti), 500);
   dialog.querySelector('[data-again]').onclick = () => { dialog.close(); onAgain(); };
   dialog.querySelector('[data-another]').onclick = () => { dialog.close(); onAnother(); };
+  dialog.querySelector('[data-review]')?.addEventListener('click', () => { dialog.close(); onReview(); });
+  dialog.querySelectorAll('[data-show]').forEach(b => { b.onclick = () => { dialog.close(); onShow(b.dataset.show); }; });
 }
