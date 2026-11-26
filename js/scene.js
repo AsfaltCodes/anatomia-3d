@@ -66,7 +66,8 @@ export async function createScene(canvas, structures) {
   controls.minDistance = 0.12;
   controls.maxDistance = 6;
 
-  const composer = new EffectComposer(renderer);
+  // The composer draws into its own buffer, which skips the renderer's antialiasing; 4× MSAA brings it back.
+  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { samples: 4, type: THREE.HalfFloatType }));
   composer.addPass(new RenderPass(scene, camera));
   const outline = new OutlinePass(new THREE.Vector2(1, 1), scene, camera);
   outline.visibleEdgeColor.set(INK);
