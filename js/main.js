@@ -28,7 +28,7 @@ const handlers = { pick: null, hover: null };
 
 const escape = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const quizName = q => q.name[getLang()];
-const poolOf = q => structures.filter(s => s.system === q.system && (!q.region || s.region === q.region));
+const poolOf = q => structures.filter(s => s.system !== 'skin' && (q.system === 'all' || s.system === q.system) && (!q.region || s.region === q.region));
 const quizFor = s => quizzes.find(q => q.system === s.system && q.region === s.region);
 const bestKey = (quizId, mode, detail) => `best:${quizId}:${mode}:${detail}`;
 // A card only shows runs that covered the whole quiz, so 100% always means every part.
@@ -227,6 +227,10 @@ function homePage() {
             </div>
           </div>
         </header>
+        <section class="group" id="group-explore">
+          <h2>${t('mode.learn')}</h2>
+          <div class="cards">${quizzes.filter(q => q.system === 'all').map(card).join('')}</div>
+        </section>
         ${QUIZ_SYSTEMS.map(system => `
           <section class="group" id="group-${system}">
             <h2>${t(`system.${system}`)}</h2>
@@ -256,9 +260,9 @@ function homePage() {
         <span class="card-title">${escape(quizName(q))}</span>
         <span class="card-meta">
           <span>${poolOf(q).length} ${t('home.parts')}</span>
-          <span class="${best ? 'card-best' : ''}">${best ? `${t('home.best')} ${best.score}%` : t('home.notPlayed')}</span>
+          ${q.system === 'all' ? '' : `<span class="${best ? 'card-best' : ''}">${best ? `${t('home.best')} ${best.score}%` : t('home.notPlayed')}</span>`}
         </span>
-        <span class="card-progress" aria-hidden="true"><i style="width:${best ? best.score : 0}%"></i></span>
+        ${q.system === 'all' ? '' : `<span class="card-progress" aria-hidden="true"><i style="width:${best ? best.score : 0}%"></i></span>`}
       </span>
     </a>`;
   }
@@ -349,7 +353,8 @@ function playPage(quizDef) {
   const pool = poolOf(quizDef);
   const byId = new Map(structures.map(s => [s.id, s]));
   const details = availableDetails(pool);
-  let mode = 'click';
+  const explore = system === 'all';
+  let mode = explore ? 'learn' : 'click';
   let detail = details.includes('all') ? 'all' : details[0];
   let answerStyle = load('answerStyle', 'choices');
   let scene = null;
@@ -407,6 +412,7 @@ function playPage(quizDef) {
 
   function syncToolbar() {
     el.root.querySelector('[data-detail-wrap]').hidden = mode === 'learn' || details.length < 2;
+    el.root.querySelector('[data-mode]').closest('.select').hidden = explore;
     el.root.querySelector('[data-skip]').hidden = mode === 'learn';
     el.root.querySelectorAll('[data-layer]').forEach(box => { box.checked = scene.layers[box.dataset.layer]; });
   }
@@ -603,8 +609,8 @@ function playPage(quizDef) {
       el.stage.querySelector('.loading').remove();
       el.stage.prepend(sceneCanvas);
       scene.setTheme(isDark());
-      SYSTEMS.forEach(s => scene.setLayer(s, s === system || s === 'skin'));
-      scene.setFocus(system, pool.map(s => s.id));
+      SYSTEMS.forEach(s => scene.setLayer(s, explore || s === system || s === 'skin'));
+      scene.setFocus(explore ? QUIZ_SYSTEMS : [system], pool.map(s => s.id));
       scene.resume();
       wire();
       start();

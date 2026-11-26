@@ -32,7 +32,7 @@ const regions = new Set(quizzes.filter(q => q.region).map(q => `${q.system}/${q.
 for (const s of structures)
   if (s.system !== 'skin' && !regions.has(`${s.system}/${s.region}`)) errors.push(`${s.id}: region ${s.region} has no quiz`);
 for (const q of quizzes) {
-  const size = structures.filter(s => s.system === q.system && (!q.region || s.region === q.region)).length;
+  const size = structures.filter(s => s.system !== 'skin' && (q.system === 'all' || s.system === q.system) && (!q.region || s.region === q.region)).length;
   if (size < 4) errors.push(`quiz ${q.id}: only ${size} structures`);
   if (!q.name?.ro || !q.name?.en) errors.push(`quiz ${q.id}: missing name`);
 }

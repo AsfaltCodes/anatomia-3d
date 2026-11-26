@@ -85,7 +85,7 @@ svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 .menu-panel a { padding: 9px 12px; border-radius: 6px; }
 .menu-panel a:hover, .menu-panel a:focus-visible { background: var(--pink-soft); color: var(--pink-deep); }
 .menu-panel.up { top: auto; bottom: calc(100% + 8px); min-width: 200px; }
-.layers .menu-panel.up { left: auto; right: 0; }
+.layers .menu-panel.up { position: fixed; left: var(--gutter); right: auto; bottom: calc(68px + env(safe-area-inset-bottom)); }
 
 .search { position: relative; margin-left: auto; width: min(320px, 32vw); }
 .search input {

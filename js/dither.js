@@ -74,7 +74,8 @@ export async function createThumbnails(structures, quizzes) {
   const material = new THREE.MeshStandardMaterial({ color: 0x9c9599, roughness: 0.7 });
   const pivot = new THREE.Group();
   scene.add(pivot);
-  const systems = [...new Set(quizzes.map(q => q.system))];
+  const systemsOf = quiz => (quiz.system === 'all' ? ['bones', 'muscles'] : [quiz.system]);
+  const systems = [...new Set(quizzes.flatMap(systemsOf))];
   const groups = {};
   for (const system of systems) {
     const group = (await loadSystem(system)).scene.clone();
@@ -88,10 +89,11 @@ export async function createThumbnails(structures, quizzes) {
   }
 
   const views = new Map(quizzes.map(quiz => {
-    const ids = new Set(structures.filter(s => s.system === quiz.system && (!quiz.region || s.region === quiz.region)).map(s => s.id));
+    const shown = systemsOf(quiz);
+    const ids = new Set(structures.filter(s => shown.includes(s.system) && (!quiz.region || s.region === quiz.region)).map(s => s.id));
     const meshes = [];
-    groups[quiz.system].traverse(o => { if (o.isMesh && ids.has(o.name)) meshes.push(o); });
-    return [quiz.id, { system: quiz.system, ids, box: boxOf(meshes) }];
+    shown.forEach(system => groups[system].traverse(o => { if (o.isMesh && ids.has(o.name)) meshes.push(o); }));
+    return [quiz.id, { systems: shown, ids, box: boxOf(meshes) }];
   }));
 
   let lastW = 0;
@@ -102,7 +104,7 @@ export async function createThumbnails(structures, quizzes) {
     if (!w || !h) return;
     const view = views.get(quizId);
     for (const [system, group] of Object.entries(groups)) {
-      group.visible = system === view.system;
+      group.visible = view.systems.includes(system);
       if (group.visible) group.traverse(o => { if (o.isMesh) o.visible = view.ids.has(o.name); });
     }
     const center = view.box.getCenter(new THREE.Vector3());

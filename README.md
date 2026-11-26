@@ -34,10 +34,11 @@ npm run check:strings  # every UI string exists in RO and EN
 npm run build:models   # rebuild assets/models from BodyParts3D OBJs in raw/
 ```
 
-`build:models` expects the BodyParts3D 4.0 archives (`isa_` and `partof_` OBJ zips plus their `*_element_parts.txt`) unzipped into `raw/`. Download them from <https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/>.
+`build:models` expects the BodyParts3D 4.0 archives (`isa_` and `partof_` OBJ zips plus their `*_element_parts.txt`) unzipped into `raw/`, plus `raw/za-nerves.glb` (Z-Anatomy's `NervousSystem100.fbx` converted with `node_modules/fbx2gltf/bin/Darwin/FBX2glTF --binary --input raw/NervousSystem100.fbx --output raw/za-nerves`). Download them from <https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/>.
 
 ## Credits
 
 - Models: BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International
+- Peripheral nerves: [Z-Anatomy](https://www.z-anatomy.com) (CC BY-SA 4.0), converted from `NervousSystem100.fbx` with `fbx2gltf`
 - [three.js](https://threejs.org) (MIT)
 - Font: Inter (SIL OFL)

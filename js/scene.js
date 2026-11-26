@@ -12,7 +12,7 @@ const BACKGROUND = 0xffffff;
 const INK = 0x18161b;
 const PINK = 0xe6397a;
 const SLATE = 0x4a4550;
-const TONES = { bones: 0xebe6e0, muscles: 0xdcc4bf, nerves: 0xe8e0d7, skin: 0xd9d3d0 };
+const TONES = { bones: 0xebe6e0, muscles: 0xdcc4bf, nerves: 0xe3c07a, skin: 0xd9d3d0 };
 const STATE_COLORS = { wrong: SLATE, target: PINK, correct: PINK };
 const DIMMED_OPACITY = 0.18;
 const CLICK_TOLERANCE_PX = 6;
@@ -201,15 +201,15 @@ export async function createScene(canvas, structures) {
     },
 
     // The focused parts are pickable; the rest of their system stays visible but faded, for context.
-    setFocus(system, ids) {
+    setFocus(systems, ids) {
       focusIds = ids;
       const focus = new Set(ids);
       pickable = [];
       for (const [id, mesh] of meshes) {
         const s = byId.get(id).system;
         if (s === 'skin') continue;
-        const inFocus = s === system && focus.has(id);
-        const faded = s === system && !inFocus;
+        const inFocus = systems.includes(s) && focus.has(id);
+        const faded = systems.includes(s) && !inFocus;
         Object.assign(mesh.material, { transparent: faded, opacity: faded ? DIMMED_OPACITY : 1, depthWrite: !faded });
         if (inFocus) pickable.push(mesh);
       }

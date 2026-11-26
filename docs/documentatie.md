@@ -116,6 +116,9 @@ Când scrii numele, jocul este „îngăduitor”:
 ### Mod luminos și mod întunecat
 Butonul cu soare/lună din bara de sus schimbă tema. La prima vizită, site-ul folosește tema dispozitivului (`prefers-color-scheme`); după ce apeși butonul, alegerea ta se ține minte. Modelul 3D, imaginile de pe carduri și lupa de pe titlu își schimbă și ele culorile.
 
+### Explorează corpul
+Primul card de pe pagina principală, **Explorează corpul**, deschide tot corpul fără scor: pielea, mușchii, oasele și sistemul nervos, toate deodată. Din **Straturi** ascunzi sau arăți fiecare sistem (de exemplu, ascunzi mușchii ca să ajungi la oase), iar o atingere pe orice structură o colorează cu roz și îi arată numele și descrierea.
+
 ### Despre și Confidențialitate
 În subsolul paginii sunt linkuri spre **Despre** (ce este site-ul, de unde vin datele, licențe) și **Confidențialitate**. Site-ul **nu folosește cookie-uri** și nu trimite date nicăieri, deci nu are nevoie de un banner de consimțământ. Recordurile se păstrează doar în browser (`localStorage`). Pe pagina de confidențialitate există un buton **Șterge progresul**.
 
@@ -279,7 +282,9 @@ Scriptul `tools/build-models.mjs` (rulat o singură dată, cu `npm run build:mod
 
 Scriptul `tools/check-data.mjs` (`npm run check:data`) verifică că fiecare structură are nume și descriere în ambele limbi și un model 3D.
 
-**Limite ale datelor:** BodyParts3D nu conține nervii periferici (sciatic, median etc.) și nici câțiva mușchi (marele dorsal, dreptul abdominal, maseterul, mușchii feței). De aceea sistemul nervos se limitează la sistemul nervos central.
+**Nervii periferici** (sciatic, median, ulnar, radial, plexul brahial, vag etc.) nu există în BodyParts3D, așa că provin din atlasul **Z-Anatomy**, care e construit pornind tot de la BodyParts3D. Z-Anatomy oferă sistemul nervos ca fișier FBX; scriptul îl transformă în glTF cu programul `fbx2gltf` și ia fiecare nerv după nume (de exemplu `Median nerve.r` și `Median nerve.l`). Cele două atlase sunt puțin decalate unul față de altul, așa că am comparat șase structuri ale creierului care există în amândouă (corpul calos, hipocampul, talamusul, puntea, bulbul) și am obținut o mărire de 1,031 și o deplasare fixă. După aplicarea lor, nervii se potrivesc pe schelet cu o eroare sub un milimetru.
+
+**Limite ale datelor:** BodyParts3D nu conține câțiva mușchi (marele dorsal, dreptul abdominal, maseterul, mușchii feței), așa că aceștia lipsesc din quizuri.
 
 **Verificarea conținutului:** denumirile și descrierile în română au fost scrise pentru acest proiect și trebuie verificate de profesorul de biologie înainte de prezentare.
 
@@ -299,6 +304,7 @@ Testele verifică, de exemplu, că punctajul e 100/66/33/0, că un click în gol
 ## 8. Surse și licențe
 
 - **BodyParts3D**, © The Database Center for Life Science licensed under CC Attribution 4.0 International — <https://dbarchive.biosciencedbc.jp/en/bodyparts3d/>
+- **Z-Anatomy** (nervii periferici), licență CC BY-SA 4.0 — <https://www.z-anatomy.com>
 - **three.js** — licență MIT — <https://threejs.org>
 - **Inter** — font cu licență SIL Open Font License (fișierul de licență este în `vendor/fonts/`)
 

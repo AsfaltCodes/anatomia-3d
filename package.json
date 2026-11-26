@@ -15,6 +15,7 @@
     "@gltf-transform/core": "^4.5.1",
     "@gltf-transform/extensions": "^4.5.1",
     "@gltf-transform/functions": "^4.5.1",
+    "fbx2gltf": "^0.9.7-p1",
     "meshoptimizer": "^0.22.0",
     "three": "^0.170.0"
   }

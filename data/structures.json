@@ -2044,6 +2044,370 @@
   }
  },
  {
+  "id": "brachial-plexus",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Roots of brachial plexus",
+   "za:Superior trunk of brachial plexus",
+   "za:Middle trunk of brachial plexus",
+   "za:Inferior trunk of brachial plexus",
+   "za:Anterior division of superior trunk of brachial plexus",
+   "za:Posterior division of superior trunk of brachial plexus",
+   "za:Anterior division of middle trunk of brachial plexus",
+   "za:Posterior division of middle trunk of brachial plexus",
+   "za:Anterior division of inferior trunk of brachial plexus",
+   "za:Posterior division of inferior trunk of brachial plexus",
+   "za:Posterior cord of brachial plexus"
+  ],
+  "name": {
+   "ro": "Plexul brahial",
+   "en": "Brachial plexus"
+  },
+  "desc": {
+   "ro": "Rețea de nervi la baza gâtului din care pornesc toți nervii membrului superior.",
+   "en": "A network of nerves at the base of the neck that gives rise to all the nerves of the arm."
+  }
+ },
+ {
+  "id": "median-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Median nerve",
+   "za:Common palmar digital branches of median nerve",
+   "za:Proper palmar digital branches of median nerve",
+   "za:Palmar branch of median nerve",
+   "za:Muscular branches of median nerve"
+  ],
+  "name": {
+   "ro": "Nervul median",
+   "en": "Median nerve"
+  },
+  "desc": {
+   "ro": "Coboară prin mijlocul antebrațului; mișcă degetul mare și dă sensibilitate palmei.",
+   "en": "Runs down the middle of the forearm; moves the thumb and gives feeling to the palm."
+  }
+ },
+ {
+  "id": "ulnar-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Ulnar nerve",
+   "za:Dorsal branch of ulnar nerve",
+   "za:Dorsal digital branches of ulnar nerve",
+   "za:Superficial branch of ulnar nerve",
+   "za:Common palmar digital branches of ulnar nerve",
+   "za:Proper palmar digital branches of ulnar nerve",
+   "za:Palmar branch of ulnar nerve",
+   "za:Deep branch of ulnar nerve",
+   "za:Muscular branches of ulnar nerve"
+  ],
+  "name": {
+   "ro": "Nervul ulnar",
+   "en": "Ulnar nerve"
+  },
+  "desc": {
+   "ro": "Trece pe la spatele cotului („musculița”); controlează mușchii mici ai mâinii.",
+   "en": "Passes behind the elbow (the \"funny bone\"); controls the small muscles of the hand."
+  }
+ },
+ {
+  "id": "radial-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Radial nerve",
+   "za:Deep branch of radial nerve",
+   "za:Superficial branch of radial nerve",
+   "za:Dorsal digital branches of radial nerve",
+   "za:Muscular branches of radial nerve"
+  ],
+  "name": {
+   "ro": "Nervul radial",
+   "en": "Radial nerve"
+  },
+  "desc": {
+   "ro": "Înconjoară humerusul pe spate; întinde cotul, încheietura și degetele.",
+   "en": "Wraps around the back of the humerus; straightens the elbow, wrist and fingers."
+  }
+ },
+ {
+  "id": "intercostal-nerves",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Intercostal nerves"
+  ],
+  "name": {
+   "ro": "Nervii intercostali",
+   "en": "Intercostal nerves"
+  },
+  "desc": {
+   "ro": "Merg pe sub fiecare coastă; mișcă mușchii dintre coaste și dau sensibilitate toracelui.",
+   "en": "Run under each rib; move the muscles between the ribs and give feeling to the chest wall."
+  }
+ },
+ {
+  "id": "vagus-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Vagus nerve (X)"
+  ],
+  "name": {
+   "ro": "Nervul vag",
+   "en": "Vagus nerve"
+  },
+  "desc": {
+   "ro": "Nervul cranian X; coboară până în abdomen și încetinește inima, controlează digestia.",
+   "en": "Cranial nerve X; travels down to the abdomen, slows the heart and controls digestion."
+  }
+ },
+ {
+  "id": "femoral-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Femoral nerve",
+   "za:Anterior cutaneous branches of femoral nerve",
+   "za:Saphenous nerve",
+   "za:Infrapatellar branch of saphenous nerve",
+   "za:Medial crural cutaneous branches of saphenous nerve"
+  ],
+  "name": {
+   "ro": "Nervul femural",
+   "en": "Femoral nerve"
+  },
+  "desc": {
+   "ro": "În fața coapsei; acționează cvadricepsul, care întinde genunchiul.",
+   "en": "At the front of the thigh; drives the quadriceps, which straightens the knee."
+  }
+ },
+ {
+  "id": "sciatic-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Sciatic nerve"
+  ],
+  "name": {
+   "ro": "Nervul sciatic",
+   "en": "Sciatic nerve"
+  },
+  "desc": {
+   "ro": "Cel mai gros și mai lung nerv din corp; coboară pe spatele coapsei.",
+   "en": "The thickest and longest nerve in the body; runs down the back of the thigh."
+  }
+ },
+ {
+  "id": "tibial-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Tibial nerve"
+  ],
+  "name": {
+   "ro": "Nervul tibial",
+   "en": "Tibial nerve"
+  },
+  "desc": {
+   "ro": "Ramura sciaticului din spatele gambei; îndoaie piciorul și degetele.",
+   "en": "The branch of the sciatic at the back of the leg; points the foot and curls the toes."
+  }
+ },
+ {
+  "id": "common-fibular-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 1,
+  "src": [
+   "za:Common fibular nerve",
+   "za:Sural communicating branch of common fibular nerve",
+   "za:Superficial fibular nerve",
+   "za:Dorsal digital branches of superficial fibular nerve",
+   "za:Deep fibular nerve",
+   "za:Dorsal digital branches of deep fibular nerve",
+   "za:Muscular branches of deep fibular nerve"
+  ],
+  "name": {
+   "ro": "Nervul peronier comun",
+   "en": "Common fibular nerve"
+  },
+  "desc": {
+   "ro": "Înconjoară capul fibulei; ridică vârful piciorului.",
+   "en": "Wraps around the head of the fibula; lifts the front of the foot."
+  }
+ },
+ {
+  "id": "musculocutaneous-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Musculocutaneous nerve"
+  ],
+  "name": {
+   "ro": "Nervul musculocutanat",
+   "en": "Musculocutaneous nerve"
+  },
+  "desc": {
+   "ro": "Străbate bicepsul; îndoaie cotul.",
+   "en": "Pierces the biceps; bends the elbow."
+  }
+ },
+ {
+  "id": "axillary-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Axillary nerve",
+   "za:Muscular branches of axillary nerve"
+  ],
+  "name": {
+   "ro": "Nervul axilar",
+   "en": "Axillary nerve"
+  },
+  "desc": {
+   "ro": "Înconjoară gâtul humerusului; acționează mușchiul deltoid.",
+   "en": "Wraps around the neck of the humerus; drives the deltoid."
+  }
+ },
+ {
+  "id": "obturator-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Obturator nerve",
+   "za:Posterior branch of obturator nerve",
+   "za:Anterior branch of obturator nerve"
+  ],
+  "name": {
+   "ro": "Nervul obturator",
+   "en": "Obturator nerve"
+  },
+  "desc": {
+   "ro": "Iese prin gaura bazinului; apropie coapsele.",
+   "en": "Leaves through a hole in the pelvis; pulls the thighs together."
+  }
+ },
+ {
+  "id": "superior-gluteal-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Superior gluteal nerve"
+  ],
+  "name": {
+   "ro": "Nervul fesier superior",
+   "en": "Superior gluteal nerve"
+  },
+  "desc": {
+   "ro": "Acționează mușchii fesieri mijlociu și mic.",
+   "en": "Drives the gluteus medius and minimus."
+  }
+ },
+ {
+  "id": "pudendal-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Pudendal nerve"
+  ],
+  "name": {
+   "ro": "Nervul rușinos",
+   "en": "Pudendal nerve"
+  },
+  "desc": {
+   "ro": "Nervul principal al perineului.",
+   "en": "The main nerve of the perineum."
+  }
+ },
+ {
+  "id": "facial-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Facial nerve (VII)"
+  ],
+  "name": {
+   "ro": "Nervul facial",
+   "en": "Facial nerve"
+  },
+  "desc": {
+   "ro": "Nervul cranian VII; mișcă mușchii feței (mimica).",
+   "en": "Cranial nerve VII; moves the muscles of facial expression."
+  }
+ },
+ {
+  "id": "trigeminal-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Trigeminal nerve (V)",
+   "za:Sensory root of trigeminal nerve",
+   "za:Motor root of trigeminal nerve"
+  ],
+  "name": {
+   "ro": "Nervul trigemen",
+   "en": "Trigeminal nerve"
+  },
+  "desc": {
+   "ro": "Nervul cranian V; sensibilitatea feței și mestecatul.",
+   "en": "Cranial nerve V; feeling in the face and chewing."
+  }
+ },
+ {
+  "id": "hypoglossal-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Hypoglossal nerve (XII)"
+  ],
+  "name": {
+   "ro": "Nervul hipoglos",
+   "en": "Hypoglossal nerve"
+  },
+  "desc": {
+   "ro": "Nervul cranian XII; mișcă limba.",
+   "en": "Cranial nerve XII; moves the tongue."
+  }
+ },
+ {
+  "id": "accessory-nerve",
+  "system": "nerves",
+  "region": "peripheral",
+  "tier": 2,
+  "src": [
+   "za:Accessory nerve (XI)"
+  ],
+  "name": {
+   "ro": "Nervul accesor",
+   "en": "Accessory nerve"
+  },
+  "desc": {
+   "ro": "Nervul cranian XI; mișcă trapezul și sternocleidomastoidianul.",
+   "en": "Cranial nerve XI; moves the trapezius and sternocleidomastoid."
+  }
+ },
+ {
   "id": "skin",
   "system": "skin",
   "tier": 1,

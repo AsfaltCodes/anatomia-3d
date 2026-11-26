@@ -8,6 +8,12 @@ import { weld, simplify, reorder, quantize } from '@gltf-transform/functions';
 import { MeshoptEncoder, MeshoptSimplifier } from 'meshoptimizer';
 
 const RAW = 'raw';
+const ZA_FILE = `${RAW}/za-nerves.glb`;
+// Z-Anatomy (built from BodyParts3D) sits in a slightly different frame: matching six brain parts
+// that both datasets share (corpus callosum, hippocampus, thalamus, pons, medulla) gives
+// bodyparts = ZA_SCALE * zanatomy + ZA_OFFSET, accurate to well under a millimetre.
+const ZA_SCALE = 1.031;
+const ZA_OFFSET = [-0.0007, -0.1221, 0.0884];
 const OBJ_DIRS = [`${RAW}/isa_BP3D_4.0_obj_99`, `${RAW}/partof_BP3D_4.0_obj_99`];
 const SYSTEMS = ['bones', 'muscles', 'nerves', 'skin'];
 const RATIO = { bones: 0.25, muscles: 0.2, nerves: 0.25, skin: 0.1 };
@@ -32,6 +38,7 @@ export function resolveElements(structures, index) {
   for (const s of structures) {
     const elements = new Set();
     for (const name of s.src) {
+      if (name.startsWith('za:')) continue;
       if (!index.has(name)) errors.push(`${s.id}: unknown concept "${name}"`);
       else index.get(name).forEach(e => elements.add(e));
     }
@@ -66,9 +73,33 @@ function parseObj(text, positions, indices) {
   }
 }
 
+// "za:Median nerve" takes "Median nerve.r" and "Median nerve.l" (or the unsided name) from Z-Anatomy.
+function addZaNodes(zaNodes, name, positions, indices) {
+  const nodes = [`${name}.r`, `${name}.l`, name].map(n => zaNodes.get(n)).filter(Boolean);
+  for (const node of nodes) {
+    const m = node.getWorldMatrix();
+    for (const prim of node.getMesh().listPrimitives()) {
+      const base = positions.length / 3;
+      const pos = prim.getAttribute('POSITION');
+      const v = [0, 0, 0];
+      for (let i = 0; i < pos.getCount(); i++) {
+        pos.getElement(i, v);
+        for (let r = 0; r < 3; r++) positions.push(ZA_SCALE * (m[r] * v[0] + m[4 + r] * v[1] + m[8 + r] * v[2] + m[12 + r]) + ZA_OFFSET[r]);
+      }
+      const idx = prim.getIndices()?.getArray() ?? Array.from({ length: pos.getCount() }, (_, i) => i);
+      for (const i of idx) indices.push(base + i);
+    }
+  }
+  return nodes.length;
+}
+
 async function main() {
   const structures = JSON.parse(readFileSync('data/structures.json', 'utf8'));
   const { result, errors } = resolveElements(structures, loadConceptIndex());
+  const needsZa = structures.some(s => s.src.some(n => n.startsWith('za:')));
+  const zaNodes = needsZa
+    ? new Map((await new NodeIO().read(ZA_FILE)).getRoot().listNodes().filter(n => n.getMesh()).map(n => [n.getName(), n]))
+    : new Map();
   const geometry = new Map();
   for (const s of structures) {
     const positions = [];
@@ -77,6 +108,9 @@ async function main() {
       const p = objPath(element);
       if (!p) { errors.push(`${s.id}: missing OBJ ${element}`); continue; }
       parseObj(readFileSync(p, 'utf8'), positions, indices);
+    }
+    for (const name of s.src.filter(n => n.startsWith('za:'))) {
+      if (!addZaNodes(zaNodes, name.slice(3), positions, indices)) errors.push(`${s.id}: no Z-Anatomy part "${name.slice(3)}"`);
     }
     geometry.set(s.id, { positions, indices });
   }

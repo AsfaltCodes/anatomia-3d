@@ -1,4 +1,5 @@
 [
+ {"id":"explore","system":"all","region":null,"name":{"ro":"Explorează corpul","en":"Explore the body"}},
  {"id":"bones","system":"bones","region":null,"name":{"ro":"Tot scheletul","en":"Whole skeleton"}},
  {"id":"bones-head","system":"bones","region":"head","name":{"ro":"Oasele capului","en":"Head bones"}},
  {"id":"bones-trunk","system":"bones","region":"trunk","name":{"ro":"Oasele trunchiului","en":"Trunk bones"}},
@@ -12,5 +13,6 @@
  {"id":"nerves","system":"nerves","region":null,"name":{"ro":"Tot sistemul nervos","en":"Whole nervous system"}},
  {"id":"nerves-cortex","system":"nerves","region":"cortex","name":{"ro":"Scoarța cerebrală","en":"Cerebral cortex"}},
  {"id":"nerves-deep","system":"nerves","region":"deep","name":{"ro":"Structurile profunde ale creierului","en":"Deep brain structures"}},
- {"id":"nerves-brainstem","system":"nerves","region":"brainstem","name":{"ro":"Trunchiul cerebral și măduva","en":"Brainstem and spinal cord"}}
+ {"id":"nerves-brainstem","system":"nerves","region":"brainstem","name":{"ro":"Trunchiul cerebral și măduva","en":"Brainstem and spinal cord"}},
+ {"id":"nerves-peripheral","system":"nerves","region":"peripheral","name":{"ro":"Nervii periferici","en":"Peripheral nerves"}}
 ]
